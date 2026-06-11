@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Patient Tracker — Al Hud Hud Veterinary Clinic</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/app.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d6b88a' stroke-width='1.5'><circle cx='8' cy='7' r='2.2'/><circle cx='16' cy='7' r='2.2'/><circle cx='4.5' cy='12' r='2'/><circle cx='19.5' cy='12' r='2'/><path d='M12 11c-2.8 0-5.5 3-5.5 5.6 0 1.6 1.2 2.4 2.6 2.4 1.1 0 1.9-.6 2.9-.6s1.8.6 2.9.6c1.4 0 2.6-.8 2.6-2.4C17.5 14 14.8 11 12 11Z'/></svg>" />
+<style>
+  body { padding-top: 78px; }
+  .wrap { width: min(740px, 92%); margin: 0 auto; padding: 56px 0 100px; }
+
+  .page-kicker { text-align: center; margin-bottom: 34px; }
+  .page-kicker .kicker { justify-content: center; }
+  .page-kicker .kicker::before { display: none; }
+
+  /* ---------- live badge ---------- */
+  .live-badge { display: inline-flex; align-items: center; gap: 9px; padding: 8px 18px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface); font-size: 11.5px; font-weight: 600;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+  .live-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: breathe 2.4s ease-in-out infinite; }
+  @keyframes breathe { 0%,100% { opacity: 1; transform: scale(1);} 50% { opacity: .45; transform: scale(.8);} }
+
+  /* ---------- pet hero ---------- */
+  .pet-hero { text-align: center; padding: 0 36px 48px; margin-bottom: 22px; overflow: hidden; }
+  .pet-hero::before { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+    background: radial-gradient(560px 280px at 50% -60px, rgba(214,184,138,.12), transparent 70%); }
+  .pet-hero > * { position: relative; z-index: 2; }
+
+  /* species photo banner */
+  .hero-photo { margin: 0 -36px 0; height: 168px; position: relative; overflow: hidden; z-index: 0 !important; }
+  .hero-photo img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.8) brightness(.75); }
+  .hero-photo::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(13,13,18,.25), rgba(13,13,18,.96) 92%); }
+
+  /* floating paw prints */
+  .paw-field { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1 !important; }
+  .paw-field .fp { position: absolute; bottom: -36px; color: var(--accent); opacity: 0;
+    animation: pawFloat linear infinite; }
+  @keyframes pawFloat {
+    0% { transform: translateY(0) rotate(-12deg) scale(1); opacity: 0; }
+    12% { opacity: .14; }
+    80% { opacity: .08; }
+    100% { transform: translateY(-520px) rotate(14deg) scale(.8); opacity: 0; }
+  }
+
+  /* mascot */
+  .monogram { width: 104px; height: 104px; border-radius: 50%; margin: -52px auto 22px; display: grid; place-items: center;
+    font-family: var(--font-serif); font-style: italic; font-size: 44px; color: var(--accent);
+    border: 1px solid var(--line-bright); position: relative; background: #14141b;
+    box-shadow: 0 14px 40px rgba(0,0,0,.45); }
+  .monogram::after { content: ''; position: absolute; inset: -9px; border-radius: 50%;
+    border: 1px solid rgba(214,184,138,.18); }
+  .monogram svg { width: 62px; height: 62px; animation: mascotBob 4.5s ease-in-out infinite; }
+  @keyframes mascotBob { 0%,100% { transform: translateY(0) rotate(0deg);} 35% { transform: translateY(-4px) rotate(-2.5deg);} 70% { transform: translateY(-1px) rotate(2deg);} }
+
+  /* sparkles around mascot */
+  .mascot-wrap { position: relative; display: inline-block; }
+  .sparkle { position: absolute; color: var(--accent); animation: twinkle 2.8s ease-in-out infinite; }
+  .sparkle svg { width: 100%; height: 100%; }
+  .sparkle.s1 { width: 15px; height: 15px; top: -46px; left: -64px; animation-delay: 0s; }
+  .sparkle.s2 { width: 10px; height: 10px; top: -64px; right: -58px; animation-delay: .9s; }
+  .sparkle.s3 { width: 8px; height: 8px; top: -8px; right: -76px; animation-delay: 1.7s; }
+  @keyframes twinkle { 0%,100% { opacity: .15; transform: scale(.7) rotate(0deg);} 50% { opacity: .9; transform: scale(1.15) rotate(22deg);} }
+  .pet-hero h1 { font-size: clamp(34px, 6vw, 46px); margin-bottom: 8px; }
+  .pet-hero h1 .serif { color: var(--accent); }
+  .pet-hero .sub { color: var(--muted); font-size: 14.5px; letter-spacing: .04em; margin-bottom: 26px; }
+  .pet-hero .sub b { color: var(--text); font-weight: 500; }
+
+  /* ---------- progress steps ---------- */
+  .steps { display: flex; align-items: flex-start; margin: 42px auto 4px; max-width: 540px; }
+  .step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 11px; position: relative; }
+  .step .dot { width: 13px; height: 13px; border-radius: 50%; background: var(--bg-2); border: 1.5px solid rgba(255,255,255,.18); z-index: 1; transition: all .4s; }
+  .step.done .dot { background: var(--accent); border-color: var(--accent); }
+  .step.current .dot { background: var(--ivory); border-color: var(--ivory); box-shadow: 0 0 0 5px rgba(214,184,138,.15), 0 0 18px rgba(214,184,138,.5); animation: stepPulse 2.2s ease-in-out infinite; }
+  @keyframes stepPulse { 0%,100% { box-shadow: 0 0 0 5px rgba(214,184,138,.15), 0 0 18px rgba(214,184,138,.5);} 50% { box-shadow: 0 0 0 8px rgba(214,184,138,.08), 0 0 26px rgba(214,184,138,.7);} }
+  .step .lbl { font-size: 10px; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; text-align: center; max-width: 76px; line-height: 1.45; }
+  .step.done .lbl, .step.current .lbl { color: var(--ivory); }
+  .step::before { content: ''; position: absolute; top: 6px; left: -50%; width: 100%; height: 1px; background: rgba(255,255,255,.1); }
+  .step:first-child::before { display: none; }
+  .step.done::before, .step.current::before { background: linear-gradient(90deg, rgba(214,184,138,.25), var(--accent)); }
+
+  .hero-note { margin-top: 30px; font-family: var(--font-serif); font-style: italic; font-size: 19px; color: var(--accent); }
+  .hero-note.muted-note { color: var(--muted); }
+
+  /* ---------- timeline ---------- */
+  .tl-card h3 { font-size: 13px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 30px; }
+  .timeline { position: relative; padding-left: 34px; }
+  .timeline::before { content: ''; position: absolute; left: 9px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(180deg, var(--accent), rgba(214,184,138,.06)); }
+  .t-item { position: relative; padding: 0 0 30px 16px; }
+  .t-item:last-child { padding-bottom: 4px; }
+  .t-item::before { content: ''; position: absolute; left: -29px; top: 6px; width: 9px; height: 9px; border-radius: 50%;
+    background: var(--bg); border: 1.5px solid rgba(214,184,138,.5); }
+  .t-item:first-child::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px rgba(214,184,138,.14), 0 0 14px rgba(214,184,138,.5); }
+  .t-item time { font-size: 11px; color: var(--muted); letter-spacing: .16em; text-transform: uppercase; }
+  .t-item h4 { font-family: var(--font-display); font-size: 16.5px; font-weight: 600; margin: 5px 0 3px; }
+  .t-item:first-child h4 { color: var(--accent); }
+  .t-item p { color: var(--muted); font-size: 14px; line-height: 1.65; max-width: 52ch; }
+
+  /* ---------- footer card ---------- */
+  .care-card { margin-top: 22px; text-align: center; padding: 38px 32px; }
+  .care-card .serif-line { font-family: var(--font-serif); font-style: italic; font-size: 21px; color: var(--ivory); margin-bottom: 6px; }
+  .care-card p { font-size: 13.5px; }
+  .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+
+  .err-card { text-align: center; padding: 70px 36px; }
+  .err-card .monogram { font-size: 34px; }
+
+  .fade-swap { animation: fadeSwap .5s ease; }
+  @keyframes fadeSwap { from { opacity: .4; } to { opacity: 1; } }
+
+  footer { margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="bg-fx"></div>
+<div class="bg-grid"></div>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a class="logo" href="index.html"><span class="logo-mark" data-paw></span> Al Hud Hud</a>
+    <a class="btn btn-ghost btn-sm" href="tel:+971505256568">Call Clinic</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-kicker">
+    <span class="kicker">Patient Tracker</span>
+  </div>
+  <div id="content"><!-- rendered by JS --></div>
+</div>
+
+<footer>
+  <div class="container footer-inner" style="justify-content:center;">
+    <span>Al Hud Hud Veterinary Clinic — Sharjah, UAE</span>
+  </div>
+</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/icons.js"></script>
+<script>
+  document.querySelectorAll('[data-paw]').forEach(el => el.innerHTML = HudIcons.paw);
+
+  const PILL = {
+    'Admitted': 'admitted', 'Under Examination': 'examination', 'In Treatment': 'treatment',
+    'In Surgery': 'surgery', 'Recovering': 'recovering', 'Ready for Pickup': 'pickup', 'Discharged': 'discharged'
+  };
+  const STEP_LABELS = ['Admitted', 'Examination', 'Treatment', 'Recovering', 'Ready'];
+  const STEP_MAP = {
+    'Admitted': 0, 'Under Examination': 1, 'In Treatment': 2, 'In Surgery': 2,
+    'Recovering': 3, 'Ready for Pickup': 4, 'Discharged': 4
+  };
+  function esc(s) { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
+  const fmt = ts => new Date(ts).toLocaleString('en-AE', { dateStyle: 'medium', timeStyle: 'short' });
+
+  /* ---------- cartoon mascots (line-art, on-brand) ---------- */
+  const M = (inner) => `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+  const MASCOTS = {
+    dog: M(`<circle cx="32" cy="37" r="15.5"/>
+      <path d="M21 30 C14 26 13 15 18.5 13.5 C24 12 26 19 26 24"/>
+      <path d="M43 30 C50 26 51 15 45.5 13.5 C40 12 38 19 38 24"/>
+      <circle cx="26.5" cy="35" r="1.7" fill="currentColor" stroke="none"/>
+      <circle cx="37.5" cy="35" r="1.7" fill="currentColor" stroke="none"/>
+      <path d="M30.2 40 L33.8 40 L32 42.6 Z" fill="currentColor" stroke="none"/>
+      <path d="M32 42.6 V45 M32 45 Q29 48 26.5 45.5 M32 45 Q35 48 37.5 45.5"/>`),
+    cat: M(`<circle cx="32" cy="38" r="14.5"/>
+      <path d="M21.5 28.5 L18 14 L29.5 21.5"/>
+      <path d="M42.5 28.5 L46 14 L34.5 21.5"/>
+      <circle cx="26.5" cy="36" r="1.7" fill="currentColor" stroke="none"/>
+      <circle cx="37.5" cy="36" r="1.7" fill="currentColor" stroke="none"/>
+      <path d="M30.6 41 L33.4 41 L32 43 Z" fill="currentColor" stroke="none"/>
+      <path d="M32 43 V44.4 M32 44.4 Q29.8 46.6 27.8 44.8 M32 44.4 Q34.2 46.6 36.2 44.8"/>
+      <path d="M13.5 37 L21 37.5 M14.5 42.5 L21.5 41 M50.5 37 L43 37.5 M49.5 42.5 L42.5 41"/>`),
+    bird: M(`<circle cx="32" cy="37" r="14.5"/>
+      <path d="M30 22.8 C28.5 17 30.5 13.5 34.5 12.5"/>
+      <circle cx="26.5" cy="34" r="1.7" fill="currentColor" stroke="none"/>
+      <circle cx="37.5" cy="34" r="1.7" fill="currentColor" stroke="none"/>
+      <path d="M27.5 39 L32 45.5 L36.5 39 Z"/>
+      <path d="M20 47 Q24 50.5 28 48.5 M44 47 Q40 50.5 36 48.5"/>`),
+    rabbit: M(`<circle cx="32" cy="41" r="12.5"/>
+      <path d="M26.5 30 C22 19 23 10 27.5 10 C31.5 10 31.5 21 30.5 29"/>
+      <path d="M37.5 30 C42 19 41 10 36.5 10 C32.5 10 32.5 21 33.5 29"/>
+      <circle cx="27.5" cy="39.5" r="1.6" fill="currentColor" stroke="none"/>
+      <circle cx="36.5" cy="39.5" r="1.6" fill="currentColor" stroke="none"/>
+      <path d="M30.8 43.5 L33.2 43.5 L32 45.3 Z" fill="currentColor" stroke="none"/>
+      <path d="M32 45.3 V46.6 M32 46.6 Q30 48.6 28.4 47 M32 46.6 Q34 48.6 35.6 47"/>`),
+    hamster: M(`<circle cx="32" cy="37" r="15.5"/>
+      <circle cx="21.5" cy="23.5" r="4.2"/>
+      <circle cx="42.5" cy="23.5" r="4.2"/>
+      <circle cx="26.5" cy="35" r="1.7" fill="currentColor" stroke="none"/>
+      <circle cx="37.5" cy="35" r="1.7" fill="currentColor" stroke="none"/>
+      <path d="M30.5 40 L33.5 40 L32 42.2 Z" fill="currentColor" stroke="none"/>
+      <path d="M19.5 39.5 Q23 42.5 26 40.5 M44.5 39.5 Q41 42.5 38 40.5"/>
+      <path d="M30 45 h4 M32 42.2 V45"/>`),
+    reptile: M(`<ellipse cx="32" cy="38" rx="16.5" ry="12.5"/>
+      <circle cx="24.5" cy="27" r="4.5"/>
+      <circle cx="39.5" cy="27" r="4.5"/>
+      <circle cx="24.5" cy="27" r="1.6" fill="currentColor" stroke="none"/>
+      <circle cx="39.5" cy="27" r="1.6" fill="currentColor" stroke="none"/>
+      <path d="M23 42 Q32 48 41 42"/>
+      <circle cx="30" cy="36.5" r=".9" fill="currentColor" stroke="none"/>
+      <circle cx="34" cy="36.5" r=".9" fill="currentColor" stroke="none"/>`),
+  };
+  const PAW_SVG = M(`<circle cx="22" cy="20" r="5"/><circle cx="42" cy="20" r="5"/><circle cx="12" cy="32" r="4.4"/><circle cx="52" cy="32" r="4.4"/><path d="M32 30 C24.5 30 18 38 18 44.5 C18 48.5 21 50.5 24.5 50.5 C27.3 50.5 29.4 49 32 49 C34.6 49 36.7 50.5 39.5 50.5 C43 50.5 46 48.5 46 44.5 C46 38 39.5 30 32 30 Z"/>`);
+  const STAR_SVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 L13.8 10.2 L22 12 L13.8 13.8 L12 22 L10.2 13.8 L2 12 L10.2 10.2 Z"/></svg>`;
+
+  const PHOTOS = {
+    dog:    'https://images.unsplash.com/photo-1552053831-71594a27632d?w=1100&q=70&auto=format&fit=crop',
+    cat:    'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=1100&q=70&auto=format&fit=crop',
+    bird:   'https://images.unsplash.com/photo-1452570053594-1b985d6ea890?w=1100&q=70&auto=format&fit=crop',
+    rabbit: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=1100&q=70&auto=format&fit=crop',
+    other:  'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1100&q=70&auto=format&fit=crop',
+  };
+
+  function speciesKey(species) {
+    const s = (species || '').toLowerCase();
+    for (const k of ['dog', 'cat', 'bird', 'rabbit', 'hamster', 'reptile']) if (s.includes(k)) return k;
+    return 'other';
+  }
+
+  function spawnPaws(container) {
+    if (!container) return;
+    let html = '';
+    for (let i = 0; i < 7; i++) {
+      const left = 4 + Math.random() * 88;
+      const size = 18 + Math.random() * 22;
+      const dur = 9 + Math.random() * 9;
+      const delay = Math.random() * -18;
+      html += `<span class="fp" style="left:${left}%; width:${size}px; height:${size}px; animation-duration:${dur}s; animation-delay:${delay}s;">${PAW_SVG}</span>`;
+    }
+    container.innerHTML = html;
+  }
+
+  function render(pet, mode) {
+    const el = document.getElementById('content');
+    const stepIdx = STEP_MAP[pet.status] ?? 0;
+    const tl = (pet.timeline || []).slice().reverse();
+    const sk = speciesKey(pet.species);
+    const mascot = MASCOTS[sk] || PAW_SVG;
+    const photo = PHOTOS[sk] || PHOTOS.other;
+
+    const badge = mode === 'live'
+      ? `<span class="live-badge"><span class="dot"></span> Live — updates automatically</span>`
+      : `<span class="live-badge" style="opacity:.85;">Status as of ${fmt(tl[0]?.at || pet.createdAt)}</span>`;
+
+    el.innerHTML = `
+      <div class="fade-swap">
+        <div style="text-align:center; margin-bottom:26px;">${badge}</div>
+
+        <div class="card pet-hero">
+          <div class="hero-photo"><img src="${photo}" alt="" onerror="this.parentElement.style.display='none'; document.querySelector('.monogram').style.marginTop='40px';" /></div>
+          <div class="paw-field" id="pawField"></div>
+          <div class="mascot-wrap">
+            <span class="sparkle s1">${STAR_SVG}</span>
+            <span class="sparkle s2">${STAR_SVG}</span>
+            <span class="sparkle s3">${STAR_SVG}</span>
+            <div class="monogram">${mascot}</div>
+          </div>
+          <h1>${esc(pet.petName)}</h1>
+          <p class="sub">${esc(pet.breed || pet.species || '')}${pet.age ? ' · ' + esc(pet.age) : ''} · In the care of Al Hud Hud for <b>${esc(pet.ownerName)}</b></p>
+          <span class="pill ${PILL[pet.status] || 'admitted'}" style="font-size:12.5px; padding:9px 22px;">${esc(pet.status)}</span>
+
+          <div class="steps">
+            ${STEP_LABELS.map((lbl, i) => `
+              <div class="step ${i < stepIdx ? 'done' : ''} ${i === stepIdx ? 'current' : ''}">
+                <div class="dot"></div><div class="lbl">${lbl}</div>
+              </div>`).join('')}
+          </div>
+          ${pet.status === 'Ready for Pickup' ? `<p class="hero-note">${esc(pet.petName)} is ready to come home.</p>` : ''}
+          ${pet.status === 'Discharged' ? `<p class="hero-note muted-note">${esc(pet.petName)} has been discharged — thank you for trusting us.</p>` : ''}
+        </div>
+
+        <div class="card tl-card">
+          <h3>Treatment Timeline</h3>
+          <div class="timeline">
+            ${tl.map(t => `
+              <div class="t-item">
+                <time>${fmt(t.at)}</time>
+                <h4>${esc(t.status)}</h4>
+                ${t.note ? `<p>${esc(t.note)}</p>` : ''}
+              </div>`).join('')}
+          </div>
+        </div>
+
+        <div class="card care-card">
+          <div class="serif-line">Questions about ${esc(pet.petName)}'s care?</div>
+          <p class="muted">Our team is happy to help at any time.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-sm" href="tel:+971505256568">050 525 6568</a>
+            <a class="btn btn-ghost btn-sm" href="https://wa.me/971505256568" target="_blank" rel="noopener">WhatsApp</a>
+          </div>
+        </div>
+      </div>`;
+    spawnPaws(document.getElementById('pawField'));
+  }
+
+  function renderError() {
+    document.getElementById('content').innerHTML = `
+      <div class="card err-card">
+        <div class="monogram">?</div>
+        <h2 style="margin-bottom:10px;">Link not valid</h2>
+        <p class="muted">This tracking link is missing or incomplete.<br/>Please ask the clinic to resend it.</p>
+        <div class="cta-row"><a class="btn btn-primary" href="tel:+971505256568">Call the Clinic</a></div>
+      </div>`;
+  }
+
+  async function init() {
+    const id = new URLSearchParams(location.search).get('id');
+    const hash = location.hash.match(/p=([^&]+)/);
+    const snapshot = hash ? HudStore.decodeData(hash[1]) : null;
+
+    // Prefer LIVE data by id (Firebase, or same-device localStorage)
+    let pet = null;
+    if (id) pet = await HudStore.getPatient(id).catch(() => null);
+
+    if (pet) {
+      render(pet, 'live');
+      HudStore.watchPatient(pet.id, p => render(p, 'live')); // real-time updates
+      return;
+    }
+    if (snapshot) { render(snapshot, 'snapshot'); return; } // fallback: encoded snapshot
+    renderError();
+  }
+  init();
+  window.addEventListener('hashchange', init);
+</script>
+</body>
+</html>

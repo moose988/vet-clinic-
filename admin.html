@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — Al Hud Hud Veterinary Clinic</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/app.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d6b88a' stroke-width='1.5'><circle cx='8' cy='7' r='2.2'/><circle cx='16' cy='7' r='2.2'/><circle cx='4.5' cy='12' r='2'/><circle cx='19.5' cy='12' r='2'/><path d='M12 11c-2.8 0-5.5 3-5.5 5.6 0 1.6 1.2 2.4 2.6 2.4 1.1 0 1.9-.6 2.9-.6s1.8.6 2.9.6c1.4 0 2.6-.8 2.6-2.4C17.5 14 14.8 11 12 11Z'/></svg>" />
+<style>
+  body { padding-top: 78px; }
+  .admin-shell { display: grid; grid-template-columns: 240px 1fr; gap: 30px; padding: 38px 0 90px; }
+  @media (max-width: 900px) { .admin-shell { grid-template-columns: 1fr; } }
+
+  /* sidebar */
+  .side { position: sticky; top: 106px; align-self: start; display: flex; flex-direction: column; gap: 5px; }
+  @media (max-width: 900px) { .side { position: static; flex-direction: row; flex-wrap: wrap; } }
+  .side button { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; cursor: pointer;
+    padding: 13px 17px; border-radius: 13px; border: 1px solid transparent; background: transparent;
+    color: var(--muted); font: 600 14px var(--font-display); letter-spacing: .02em; transition: all .25s; }
+  .side .sic { width: 18px; height: 18px; display: inline-grid; place-items: center; }
+  .side .sic svg { width: 17px; height: 17px; }
+  .side button:hover { color: var(--text); background: var(--surface); }
+  .side button.active { color: var(--accent); background: rgba(214,184,138,.07); border-color: rgba(214,184,138,.3); }
+  .side .sep { height: 1px; background: var(--line); margin: 10px 4px; }
+  @media (max-width: 900px) { .side button { width: auto; } .side .sep { display: none; } }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeUp .35s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px);} to { opacity: 1; transform: none;} }
+
+  .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+  .panel-head h2 { font-size: 26px; }
+
+  /* stat cards */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  @media (max-width: 800px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card { padding: 20px 24px; }
+  .stat-card b { display: block; font-family: var(--font-display); font-size: 28px; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat-card span { font-size: 11.5px; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; }
+
+  /* patient list */
+  .pat-card { margin-bottom: 16px; }
+  .pat-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; flex-wrap: wrap; }
+  .pat-id { display: flex; align-items: center; gap: 16px; }
+  .pat-avatar { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; flex: none;
+    font-family: var(--font-serif); font-style: italic; font-size: 24px; color: var(--accent);
+    border: 1px solid var(--line-bright); background: rgba(214,184,138,.05); }
+  .pat-id h3 { font-size: 18px; }
+  .pat-id small { color: var(--muted); }
+  .pat-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .pat-update { display: grid; grid-template-columns: 210px 1fr auto; gap: 10px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+  @media (max-width: 720px) { .pat-update { grid-template-columns: 1fr; } }
+
+  /* list rows */
+  .row-item { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 17px 0; border-bottom: 1px solid var(--line); }
+  .row-item:last-child { border-bottom: none; }
+  .row-item .info { display: flex; gap: 15px; align-items: center; min-width: 0; }
+  .row-item .info .ic { color: var(--accent); width: 24px; height: 24px; display: inline-grid; place-items: center; flex: none; }
+  .row-item .info b { font-family: var(--font-display); display: block; font-weight: 600; }
+  .row-item .info span { color: var(--muted); font-size: 13.5px; }
+
+  /* audit log */
+  .log-item { display: grid; grid-template-columns: 165px 150px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; align-items: baseline; }
+  .log-item:last-child { border-bottom: none; }
+  .log-item time { color: var(--muted); font-size: 12px; letter-spacing: .04em; }
+  .log-item .who b { font-family: var(--font-display); font-size: 13px; display: block; }
+  .log-item .who span { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .log-item .what b { font-weight: 600; }
+  .log-item .what span { color: var(--muted); display: block; }
+  @media (max-width: 720px) { .log-item { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* surgical record */
+  .rec-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+  .rec-meta b { color: var(--text); font-weight: 500; }
+  .rec-details { display: none; margin-top: 20px; border-top: 1px solid var(--line); }
+  .rec-details.open { display: block; animation: fadeUp .3s ease; }
+  .rec-sec { padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .rec-sec:last-child { border-bottom: none; }
+  .rec-sec > h4 { font-size: 11px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .rec-sec > h4::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+  .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .rec-grid .field { margin-bottom: 0; }
+  @media (max-width: 900px) { .rec-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 620px) { .rec-grid { grid-template-columns: 1fr; } }
+  .chk-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 24px; }
+  @media (max-width: 620px) { .chk-grid { grid-template-columns: 1fr; } }
+  .chk { display: flex; align-items: center; gap: 11px; font-size: 14px; color: var(--text); cursor: pointer;
+    padding: 9px 12px; border-radius: 10px; border: 1px solid transparent; transition: all .2s; }
+  .chk:hover { background: var(--surface); }
+  .chk input { width: 17px; height: 17px; accent-color: var(--accent); cursor: pointer; flex: none; }
+  .chk.done { color: var(--accent); }
+  .prog-chip { font-size: 11px; font-weight: 600; letter-spacing: .08em; padding: 5px 12px; border-radius: 999px;
+    border: 1px solid var(--line); color: var(--muted); }
+  .prog-chip.full { color: var(--accent); border-color: var(--line-bright); }
+  .balance-line { font-size: 13.5px; color: var(--muted); padding-top: 10px; }
+  .balance-line b { color: var(--accent); font-family: var(--font-display); }
+
+  /* billing */
+  .bill-toolbar { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .bill-toolbar input { max-width: 280px; padding: 11px 16px; }
+  .ftabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .ftab { cursor: pointer; padding: 9px 18px; border-radius: 999px; border: 1px solid var(--line); background: transparent;
+    color: var(--muted); font: 600 12.5px var(--font-display); letter-spacing: .03em; transition: all .2s; }
+  .ftab:hover { color: var(--text); }
+  .ftab.active { color: var(--accent); border-color: rgba(214,184,138,.45); background: rgba(214,184,138,.07); }
+
+  .acct { padding: 0; margin-bottom: 12px; overflow: hidden; }
+  .acct-row { display: grid; grid-template-columns: 52px 1fr auto auto 30px; gap: 16px; align-items: center; width: 100%;
+    padding: 18px 22px; background: transparent; border: none; cursor: pointer; text-align: left; color: var(--text); font: inherit; }
+  .acct-row:hover { background: var(--surface-2); }
+  .acct-row .nm { font-family: var(--font-display); font-weight: 600; font-size: 16.5px; }
+  .acct-row .ow { color: var(--muted); font-size: 13px; margin-top: 1px; }
+  .acct-row .chev { color: var(--muted); transition: transform .3s; display: grid; place-items: center; }
+  .acct.open .acct-row .chev { transform: rotate(180deg); }
+  @media (max-width: 700px) { .acct-row { grid-template-columns: 44px 1fr auto; } .acct-row .pill, .acct-row .chev { display: none; } }
+  .acct-balance { text-align: right; }
+  .acct-balance b { font-family: var(--font-display); font-size: 19px; display: block; }
+  .acct-balance span { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .acct-body { display: none; padding: 0 22px 22px; border-top: 1px solid var(--line); }
+  .acct.open .acct-body { display: block; animation: fadeUp .3s ease; }
+  .acct-summary { display: flex; gap: 22px; flex-wrap: wrap; padding: 14px 0 4px; font-size: 13px; color: var(--muted); }
+  .acct-summary b { color: var(--text); font-weight: 500; }
+  .acct-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); align-items: center; }
+  .acct-actions input, .acct-actions select { width: auto; }
+  .trx { display: grid; grid-template-columns: 150px 1fr 110px 120px 70px; gap: 14px; align-items: center;
+    padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+  .trx:last-child { border-bottom: none; }
+  .trx time { color: var(--muted); font-size: 12px; }
+  .trx .desc b { font-weight: 600; }
+  .trx .desc span { color: var(--muted); display: block; font-size: 12px; }
+  .trx .amt { font-family: var(--font-display); font-weight: 600; text-align: right; }
+  .trx .amt.charge { color: #d89aa8; }
+  .trx .amt.payment { color: #9ed0b3; }
+  .trx .mth { color: var(--muted); font-size: 12px; }
+  @media (max-width: 760px) { .trx { grid-template-columns: 1fr 100px; } .trx time, .trx .mth { display: none; } }
+  .quick-pay { display: grid; grid-template-columns: 140px 150px auto 1fr; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+  @media (max-width: 760px) { .quick-pay { grid-template-columns: 1fr; } }
+
+  /* link modal */
+  .modal-bg { position: fixed; inset: 0; z-index: 90; background: rgba(8,8,12,.75); backdrop-filter: blur(10px);
+    display: none; place-items: center; padding: 20px; }
+  .modal-bg.open { display: grid; }
+  .modal { width: min(560px, 100%); background: var(--bg-2); border: 1px solid var(--line-bright); border-radius: 22px; padding: 34px;
+    box-shadow: 0 30px 90px rgba(0,0,0,.7); animation: fadeUp .3s ease; }
+  .modal h3 { font-size: 21px; margin-bottom: 8px; }
+  .link-box { display: flex; gap: 10px; margin-top: 18px; }
+  .link-box input { font-size: 13px; color: var(--accent); }
+
+  .empty { text-align: center; padding: 54px 20px; color: var(--muted); border: 1px dashed var(--line); border-radius: var(--radius); }
+  .empty .big { display: block; margin: 0 auto 14px; width: 40px; height: 40px; color: var(--accent); opacity: .7; }
+  .empty .big svg { width: 40px; height: 40px; }
+
+  /* login gate */
+  #gate { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: grid; place-items: center; padding: 20px; }
+  .gate-card { width: min(440px, 100%); text-align: center; padding: 48px 40px; }
+  .gate-card .logo-mark { width: 58px; height: 58px; margin: 0 auto 20px; }
+  .gate-card .logo-mark svg { width: 26px; height: 26px; }
+  .gate-hint { font-size: 12px; color: var(--muted); margin-top: 18px; line-height: 1.7; }
+
+  /* user chip in nav */
+  .user-chip { display: flex; align-items: center; gap: 12px; }
+  .user-chip .uc-name { text-align: right; line-height: 1.3; }
+  .user-chip .uc-name b { font-family: var(--font-display); font-size: 13.5px; display: block; }
+  .user-chip .uc-name span { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
+  .mode-tag { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  .mode-tag.live { color: var(--accent); border-color: var(--line-bright); }
+</style>
+</head>
+<body>
+<div class="bg-fx"></div>
+<div class="bg-grid"></div>
+
+<!-- ====== LOGIN GATE ====== -->
+<div id="gate">
+  <div class="card gate-card">
+    <div class="logo-mark" data-paw style="display:grid;"></div>
+    <h2 style="margin-bottom:6px;">Staff Access</h2>
+    <p class="muted" style="font-size:14px; margin-bottom:28px;">Sign in to the clinic admin panel.</p>
+    <div class="field" style="text-align:left;"><label>Username</label><input id="loginUser" autocomplete="username" placeholder="username" /></div>
+    <div class="field" style="text-align:left;"><label>Password</label><input type="password" id="loginPw" autocomplete="current-password" placeholder="••••••••" /></div>
+    <button class="btn btn-primary" style="width:100%; margin-top:6px;" onclick="doLogin()">Sign In</button>
+    <p id="loginErr" style="color:#e09aa8; font-size:13px; margin-top:14px; visibility:hidden;">Invalid username or password</p>
+    <p class="gate-hint">First time? Sign in with <b>superadmin / admin123</b>,<br/>then change the password from the Admins panel.</p>
+  </div>
+</div>
+
+<!-- ================= NAV ================= -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a class="logo" href="index.html"><span class="logo-mark" data-paw></span> Al Hud Hud <span class="grad-text" style="margin-left:6px;">Admin</span></a>
+    <div class="user-chip">
+      <span class="mode-tag" id="modeTag"></span>
+      <div class="uc-name"><b id="ucName"></b><span id="ucRole"></span></div>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container admin-shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side">
+    <button class="active" data-panel="patients" onclick="switchPanel(this)"><span class="sic" data-icon="paw"></span> Patients</button>
+    <button data-panel="newPatient" onclick="switchPanel(this)"><span class="sic" data-icon="heart"></span> New Patient</button>
+    <button data-panel="surgeries" onclick="switchPanel(this)"><span class="sic" data-icon="scalpel"></span> Surgeries</button>
+    <button data-panel="billing" onclick="switchPanel(this)"><span class="sic" data-icon="wallet"></span> Billing</button>
+    <button data-panel="services" onclick="switchPanel(this)"><span class="sic" data-icon="stethoscope"></span> Services</button>
+    <button data-panel="offersP" onclick="switchPanel(this)"><span class="sic" data-icon="tag"></span> Offers</button>
+    <div class="sep super-only" style="display:none;"></div>
+    <button class="super-only" style="display:none;" data-panel="admins" onclick="switchPanel(this)"><span class="sic" data-icon="scan"></span> Admins</button>
+    <button class="super-only" style="display:none;" data-panel="audit" onclick="switchPanel(this)"><span class="sic" data-icon="clock"></span> Audit Trail</button>
+  </aside>
+
+  <main>
+    <!-- ================= PATIENTS ================= -->
+    <section class="panel active" id="panel-patients">
+      <div class="stats-row" id="statsRow"></div>
+      <div class="panel-head">
+        <h2>Pet <span class="grad-text">Patients</span></h2>
+        <button class="btn btn-primary btn-sm" onclick="switchPanelById('newPatient')">New Patient</button>
+      </div>
+      <div id="patientList"></div>
+    </section>
+
+    <!-- ================= NEW PATIENT ================= -->
+    <section class="panel" id="panel-newPatient">
+      <div class="panel-head"><h2>Register <span class="grad-text">New Patient</span></h2></div>
+      <div class="card" style="max-width:680px;">
+        <form id="patientForm" onsubmit="return createPatient(event)">
+          <div class="form-row">
+            <div class="field"><label>Pet Name *</label><input required id="f_petName" placeholder="e.g. Luna" /></div>
+            <div class="field"><label>Species *</label>
+              <select id="f_species">
+                <option>Dog</option><option>Cat</option><option>Bird</option>
+                <option>Rabbit</option><option>Hamster</option><option>Reptile</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label>Breed</label><input id="f_breed" placeholder="e.g. Golden Retriever" /></div>
+            <div class="field"><label>Age</label><input id="f_age" placeholder="e.g. 3 years" /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label>Owner Name *</label><input required id="f_ownerName" placeholder="e.g. Ahmed Ali" /></div>
+            <div class="field"><label>Owner Phone</label><input id="f_ownerPhone" placeholder="e.g. 050 123 4567" /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label>Reason for Admission *</label><select required id="f_reason"></select></div>
+            <div class="field"><label>Notes</label><input id="f_notes" placeholder="Symptoms, observations…" /></div>
+          </div>
+          <button class="btn btn-primary" type="submit">Register Patient</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================= SURGERIES ================= -->
+    <section class="panel" id="panel-surgeries">
+      <div class="stats-row" id="srgStats"></div>
+      <div class="panel-head"><h2>Surgery <span class="grad-text">Management</span></h2></div>
+      <div class="card" style="margin-bottom:22px;">
+        <h3 style="font-size:15px; margin-bottom:18px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);">Schedule New Surgery</h3>
+        <form onsubmit="return createSurgery(event)">
+          <div class="form-row">
+            <div class="field"><label>Patient *</label><select required id="sg_patient"><option value="">Select a patient…</option></select></div>
+            <div class="field"><label>Procedure *</label><input required id="sg_type" placeholder="e.g. Ovariohysterectomy, ACL repair, Dental extraction" /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label>Category</label><select id="sg_category"></select></div>
+            <div class="field"><label>Priority</label><select id="sg_priority"></select></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label>Lead Surgeon *</label><input required id="sg_doctor" placeholder="e.g. Dr. Khalid" /></div>
+            <div class="field"><label>Anesthetist</label><input id="sg_anesthetist" placeholder="e.g. Dr. Mona" /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label>Assistant / Tech</label><input id="sg_assistant" placeholder="e.g. Nurse Ali" /></div>
+            <div class="field"><label>Operating Theatre</label><input id="sg_theatre" placeholder="e.g. OR 1" value="OR 1" /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label>Scheduled For *</label><input required id="sg_when" type="datetime-local" /></div>
+            <div class="field"><label>Estimated Duration</label><input id="sg_estdur" placeholder="e.g. 1h 30m" /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label>Estimated Cost (AED)</label><input id="sg_estcost" type="number" min="0" step="0.01" placeholder="e.g. 1500" /></div>
+            <div class="field"><label>Pre-op Notes</label><input id="sg_notes" placeholder="Fasting instructions, allergies, prior conditions…" /></div>
+          </div>
+          <button class="btn btn-primary btn-sm" type="submit">Schedule Surgery</button>
+        </form>
+      </div>
+      <div id="surgeryList"></div>
+    </section>
+
+    <!-- ================= BILLING ================= -->
+    <section class="panel" id="panel-billing">
+      <div class="stats-row" id="billStats"></div>
+      <div class="panel-head">
+        <h2>Payment <span class="grad-text">Management</span></h2>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-sm" onclick="openBillModal('charge')">+ Add Charge</button>
+          <button class="btn btn-primary btn-sm" onclick="openBillModal('payment')">+ Record Payment</button>
+        </div>
+      </div>
+      <div class="bill-toolbar">
+        <input id="billSearch" placeholder="Search pet or owner…" oninput="renderBilling()" />
+        <div class="ftabs" id="billTabs">
+          <button class="ftab active" data-f="all" onclick="setBillFilter(this)">All</button>
+          <button class="ftab" data-f="due" onclick="setBillFilter(this)">Outstanding</button>
+          <button class="ftab" data-f="later" onclick="setBillFilter(this)">Pay Later</button>
+          <button class="ftab" data-f="overdue" onclick="setBillFilter(this)">Overdue</button>
+          <button class="ftab" data-f="settled" onclick="setBillFilter(this)">Settled</button>
+        </div>
+      </div>
+      <div id="accountList"></div>
+    </section>
+
+    <!-- ================= SERVICES ================= -->
+    <section class="panel" id="panel-services">
+      <div class="panel-head"><h2>Manage <span class="grad-text">Services</span></h2></div>
+      <div class="card" style="margin-bottom:22px;">
+        <form onsubmit="return createService(event)">
+          <div class="form-row">
+            <div class="field"><label>Icon</label><input id="s_icon" placeholder="stethoscope, syringe, tooth, flask, scan, heart, paw… or any emoji" /></div>
+            <div class="field"><label>Service Name *</label><input required id="s_name" placeholder="e.g. Microchipping" /></div>
+          </div>
+          <div class="field"><label>Description *</label><textarea required id="s_desc" rows="2" placeholder="Short description shown on the website…"></textarea></div>
+          <button class="btn btn-primary btn-sm" type="submit">Add Service</button>
+        </form>
+      </div>
+      <div class="card" id="serviceList"></div>
+    </section>
+
+    <!-- ================= OFFERS ================= -->
+    <section class="panel" id="panel-offersP">
+      <div class="panel-head"><h2>Manage <span class="grad-text">Offers</span></h2></div>
+      <div class="card" style="margin-bottom:22px;">
+        <form onsubmit="return createOffer(event)">
+          <div class="form-row">
+            <div class="field"><label>Offer Title *</label><input required id="o_title" placeholder="e.g. Summer Grooming Deal" /></div>
+            <div class="field"><label>Badge</label><input id="o_badge" placeholder="e.g. 20% OFF" /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label>Description *</label><input required id="o_desc" placeholder="What does the offer include?" /></div>
+            <div class="field"><label>Valid Until</label><input id="o_expires" type="date" /></div>
+          </div>
+          <button class="btn btn-primary btn-sm" type="submit">Add Offer</button>
+        </form>
+      </div>
+      <div class="card" id="offerList"></div>
+    </section>
+
+    <!-- ================= ADMINS (super only) ================= -->
+    <section class="panel" id="panel-admins">
+      <div class="panel-head"><h2>Admin <span class="grad-text">Accounts</span></h2></div>
+      <div class="card" style="margin-bottom:22px;">
+        <form onsubmit="return createAdmin(event)">
+          <div class="form-row">
+            <div class="field"><label>Full Name *</label><input required id="a_name" placeholder="e.g. Dr. Sara" /></div>
+            <div class="field"><label>Username *</label><input required id="a_user" placeholder="e.g. sara" autocomplete="off" /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label>Password *</label><input required id="a_pw" type="password" placeholder="min 6 characters" minlength="6" autocomplete="new-password" /></div>
+            <div class="field" style="display:flex; align-items:flex-end;"><button class="btn btn-primary btn-sm" type="submit" style="width:100%;">Create Admin</button></div>
+          </div>
+          <p class="muted" style="font-size:12.5px;">Staff admins can manage patients, services and offers. Only you (super admin) can manage accounts and view the audit trail.</p>
+        </form>
+      </div>
+      <div class="card" id="adminList"></div>
+      <div class="card" style="margin-top:22px;">
+        <h3 style="font-size:16px; margin-bottom:14px;">Change your password</h3>
+        <div class="form-row">
+          <div class="field"><label>New Password</label><input id="cp_pw" type="password" minlength="6" placeholder="min 6 characters" autocomplete="new-password" /></div>
+          <div class="field" style="display:flex; align-items:flex-end;"><button class="btn btn-ghost btn-sm" onclick="changeMyPassword()" style="width:100%;">Update Password</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= AUDIT TRAIL (super only) ================= -->
+    <section class="panel" id="panel-audit">
+      <div class="panel-head">
+        <h2>Audit <span class="grad-text">Trail</span></h2>
+        <button class="btn btn-ghost btn-sm" onclick="renderAudit()">Refresh</button>
+      </div>
+      <div class="card" id="auditList"></div>
+    </section>
+  </main>
+</div>
+
+<!-- ================= SHARE LINK MODAL ================= -->
+<div class="modal-bg" id="linkModal" onclick="if(event.target===this) closeModal()">
+  <div class="modal">
+    <h3>Owner Tracking Link</h3>
+    <p class="muted" style="font-size:14px;">Send this private link to <b id="lm_owner"></b> — they'll see <b id="lm_pet"></b>'s treatment status and timeline.</p>
+    <div class="link-box">
+      <input readonly id="lm_url" />
+      <button class="btn btn-primary btn-sm" onclick="copyLink()">Copy</button>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;">
+      <a class="btn btn-ghost btn-sm" id="lm_wa" target="_blank" rel="noopener">Send via WhatsApp</a>
+      <a class="btn btn-ghost btn-sm" id="lm_open" target="_blank" rel="noopener">Preview</a>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal()">Close</button>
+    </div>
+    <p class="muted" style="font-size:12px; margin-top:16px;" id="lm_note"></p>
+  </div>
+</div>
+
+<!-- ================= BILLING MODAL ================= -->
+<div class="modal-bg" id="billModal" onclick="if(event.target===this) closeBillModal()">
+  <div class="modal">
+    <h3 id="bm_title">Add Charge</h3>
+    <p class="muted" style="font-size:13.5px; margin-bottom:18px;" id="bm_sub"></p>
+    <form onsubmit="return submitBillModal(event)">
+      <div class="field"><label>Patient *</label><select required id="bm_patient"></select></div>
+      <div id="bm_chargeFields">
+        <div class="field"><label>Description *</label><input id="bm_desc" placeholder="e.g. Consultation, Grooming package, X-ray" /></div>
+        <div class="form-row">
+          <div class="field"><label>Amount (AED) *</label><input id="bm_amount_c" type="number" min="0.01" step="0.01" placeholder="0.00" /></div>
+          <div class="field"><label>Due Date — optional, for "pay later"</label><input id="bm_due" type="date" /></div>
+        </div>
+      </div>
+      <div id="bm_paymentFields">
+        <div class="form-row">
+          <div class="field"><label>Amount (AED) *</label><input id="bm_amount_p" type="number" min="0.01" step="0.01" placeholder="0.00" /></div>
+          <div class="field"><label>Method</label><select id="bm_method"></select></div>
+        </div>
+        <div class="field"><label>Reference / Note</label><input id="bm_note" placeholder="e.g. receipt no., card auth code" /></div>
+      </div>
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:6px;">
+        <button class="btn btn-ghost btn-sm" type="button" onclick="closeBillModal()">Cancel</button>
+        <button class="btn btn-primary btn-sm" type="submit" id="bm_submit">Add Charge</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/icons.js"></script>
+<script>
+  document.querySelectorAll('[data-paw]').forEach(el => el.innerHTML = HudIcons.paw);
+  document.querySelectorAll('[data-icon]').forEach(el => el.innerHTML = HudIcons.render(el.dataset.icon, 16));
+
+  /* populate static selects */
+  document.getElementById('f_reason').innerHTML = HudStore.ADMISSION_REASONS.map(r => `<option>${r}</option>`).join('');
+  document.getElementById('sg_category').innerHTML = HudStore.SURGERY_CATEGORIES.map(c => `<option>${c}</option>`).join('');
+  document.getElementById('sg_priority').innerHTML = HudStore.SURGERY_PRIORITIES.map(p => `<option>${p}</option>`).join('');
+
+  /* ====== helpers ====== */
+  function esc(s) { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+  const PILL = {
+    'Admitted': 'admitted', 'Under Examination': 'examination', 'In Treatment': 'treatment',
+    'In Surgery': 'surgery', 'Recovering': 'recovering', 'Ready for Pickup': 'pickup', 'Discharged': 'discharged'
+  };
+  const fmt = ts => new Date(ts).toLocaleString('en-AE', { dateStyle: 'medium', timeStyle: 'short' });
+
+  /* ====== SESSION / AUTH ====== */
+  let USER = null;
+  try { USER = JSON.parse(sessionStorage.getItem('hud_admin_user') || 'null'); } catch (e) {}
+
+  function applySession() {
+    if (USER) {
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('ucName').textContent = USER.name;
+      document.getElementById('ucRole').textContent = USER.role === 'super' ? 'Super Admin' : 'Admin';
+      if (USER.role === 'super') document.querySelectorAll('.super-only').forEach(el => el.style.display = '');
+      const tag = document.getElementById('modeTag');
+      tag.textContent = HudStore.isLive() ? 'Live · Synced' : 'Local Mode';
+      tag.classList.toggle('live', HudStore.isLive());
+      renderPatients(); renderSurgeries(); renderBilling(); renderServices(); renderOffers();
+      if (USER.role === 'super') { renderAdmins(); renderAudit(); }
+    } else {
+      document.getElementById('gate').style.display = 'grid';
+    }
+  }
+
+  async function doLogin() {
+    const u = document.getElementById('loginUser').value;
+    const p = document.getElementById('loginPw').value;
+    const user = await HudStore.login(u, p).catch(() => null);
+    if (!user) { document.getElementById('loginErr').style.visibility = 'visible'; return; }
+    USER = user;
+    sessionStorage.setItem('hud_admin_user', JSON.stringify(user));
+    await HudStore.logAudit(USER, 'Signed in', '');
+    applySession();
+    toast(`Welcome, ${user.name}`);
+  }
+  document.getElementById('loginPw').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+  async function logout() {
+    if (USER) await HudStore.logAudit(USER, 'Signed out', '');
+    sessionStorage.removeItem('hud_admin_user');
+    location.reload();
+  }
+
+  /* ====== panels ====== */
+  function switchPanel(btn) {
+    document.querySelectorAll('.side button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + btn.dataset.panel).classList.add('active');
+  }
+  function switchPanelById(id) { switchPanel(document.querySelector(`.side button[data-panel="${id}"]`)); }
+
+  /* ====== patients ====== */
+  const SPECIES_INITIAL = s => (s || '?').trim().charAt(0).toUpperCase();
+
+  async function renderPatients() {
+    const list = document.getElementById('patientList');
+    const [pats, balances] = await Promise.all([HudStore.getPatients(), HudStore.getBalances()]);
+
+    const active = pats.filter(p => p.status !== 'Discharged').length;
+    const ready = pats.filter(p => p.status === 'Ready for Pickup').length;
+    const surgery = pats.filter(p => p.status === 'In Surgery').length;
+    document.getElementById('statsRow').innerHTML = `
+      <div class="card stat-card"><b>${pats.length}</b><span>Total Patients</span></div>
+      <div class="card stat-card"><b>${active}</b><span>Active Now</span></div>
+      <div class="card stat-card"><b>${surgery}</b><span>In Surgery</span></div>
+      <div class="card stat-card"><b>${ready}</b><span>Ready for Pickup</span></div>`;
+
+    if (!pats.length) {
+      list.innerHTML = `<div class="empty"><span class="big">${HudIcons.paw}</span>No patients yet.<br/>Register your first patient to generate an owner tracking link.</div>`;
+      return;
+    }
+    list.innerHTML = pats.map(p => `
+      <div class="card pat-card">
+        <div class="pat-head">
+          <div class="pat-id">
+            <div class="pat-avatar">${esc((p.petName || '?').charAt(0).toUpperCase())}</div>
+            <div>
+              <h3>${esc(p.petName)} <span class="pill ${PILL[p.status] || 'admitted'}" style="margin-left:8px;">${esc(p.status)}</span>
+                ${p.reason ? `<span class="chip" style="margin-left:6px; vertical-align:2px;">${esc(p.reason)}</span>` : ''}
+                ${balances[p.id]?.balance > 0 ? `<span class="pill surgery" style="margin-left:6px;">Due AED ${balances[p.id].balance.toFixed(2)}</span>` : ''}</h3>
+              <small>${esc(p.breed || p.species)} ${p.age ? '· ' + esc(p.age) : ''} · Owner: ${esc(p.ownerName)} ${p.ownerPhone ? '· ' + esc(p.ownerPhone) : ''}</small>
+            </div>
+          </div>
+          <div class="pat-actions">
+            <button class="btn btn-primary btn-sm" onclick="openLink('${p.id}')">Owner Link</button>
+            <button class="btn btn-danger btn-sm" onclick="removePatient('${p.id}', '${esc(p.petName)}')">Delete</button>
+          </div>
+        </div>
+        <div class="pat-update">
+          <select id="st_${p.id}">
+            ${HudStore.STATUSES.map(s => `<option ${s === p.status ? 'selected' : ''}>${s}</option>`).join('')}
+          </select>
+          <input id="nt_${p.id}" placeholder="Optional note for the owner (e.g. 'Surgery went well, resting now')" />
+          <button class="btn btn-ghost btn-sm" onclick="pushStatus('${p.id}')">Update Status</button>
+        </div>
+      </div>`).join('');
+  }
+
+  async function createPatient(e) {
+    e.preventDefault();
+    const pat = await HudStore.addPatient({
+      petName: f_petName.value.trim(), species: f_species.value,
+      breed: f_breed.value.trim(), age: f_age.value.trim(),
+      ownerName: f_ownerName.value.trim(), ownerPhone: f_ownerPhone.value.trim(),
+      reason: f_reason.value, notes: f_notes.value.trim(),
+    });
+    await HudStore.logAudit(USER, 'Registered patient', `${pat.petName} (owner: ${pat.ownerName}) — admitted for ${pat.reason}`);
+    document.getElementById('patientForm').reset();
+    await renderPatients();
+    fillPatientSelect();
+    switchPanelById('patients');
+    toast(`${pat.petName} registered`);
+    openLink(pat.id);
+    return false;
+  }
+
+  async function pushStatus(id) {
+    const status = document.getElementById('st_' + id).value;
+    const note = document.getElementById('nt_' + id).value.trim();
+    const pat = await HudStore.updateStatus(id, status, note);
+    await HudStore.logAudit(USER, 'Updated patient status', `${pat.petName} → ${status}${note ? ' — "' + note + '"' : ''}`);
+    await renderPatients();
+    toast(HudStore.isLive()
+      ? `Status updated → ${status}. The owner's link updates automatically.`
+      : `Status updated → ${status}. Generate a fresh owner link to share the update.`);
+  }
+
+  async function removePatient(id, name) {
+    if (!confirm(`Delete ${name}'s record? This cannot be undone.`)) return;
+    await HudStore.deletePatient(id);
+    await HudStore.logAudit(USER, 'Deleted patient', name);
+    await renderPatients();
+    toast('Patient deleted');
+  }
+
+  /* ====== owner link modal ====== */
+  async function openLink(id) {
+    const p = await HudStore.getPatient(id);
+    if (!p) return;
+    const url = HudStore.buildOwnerLink(p);
+    document.getElementById('lm_owner').textContent = p.ownerName;
+    document.getElementById('lm_pet').textContent = p.petName;
+    document.getElementById('lm_url').value = url;
+    document.getElementById('lm_open').href = url;
+    document.getElementById('lm_note').textContent = HudStore.isLive()
+      ? 'This is a live link — it updates automatically on the owner\'s phone whenever you change the status. Send it once.'
+      : 'Note: without Firebase connected (assets/js/config.js), this link carries a snapshot of the current status. After updating a status, resend a fresh link — or connect Firebase to make links auto-update.';
+    const waPhone = (p.ownerPhone || '').replace(/\D/g, '').replace(/^0/, '971');
+    const waMsg = encodeURIComponent(`Hello ${p.ownerName}! Track ${p.petName}'s treatment status at Al Hud Hud Veterinary Clinic here: ${url}`);
+    document.getElementById('lm_wa').href = waPhone ? `https://wa.me/${waPhone}?text=${waMsg}` : `https://wa.me/?text=${waMsg}`;
+    document.getElementById('linkModal').classList.add('open');
+  }
+  function closeModal() { document.getElementById('linkModal').classList.remove('open'); }
+  function copyLink() {
+    const inp = document.getElementById('lm_url');
+    inp.select(); inp.setSelectionRange(0, 99999);
+    (navigator.clipboard ? navigator.clipboard.writeText(inp.value) : Promise.reject())
+      .then(() => toast('Link copied'))
+      .catch(() => { document.execCommand('copy'); toast('Link copied'); });
+  }
+
+  /* ====== services ====== */
+  async function renderServices() {
+    const wrap = document.getElementById('serviceList');
+    const items = await HudStore.getServices();
+    wrap.innerHTML = items.length ? items.map(s => `
+      <div class="row-item">
+        <div class="info"><span class="ic">${HudIcons.render(s.icon, 20)}</span><div><b>${esc(s.name)}</b><span>${esc(s.desc)}</span></div></div>
+        <button class="btn btn-danger btn-sm" onclick="removeService('${s.id}', '${esc(s.name)}')">Delete</button>
+      </div>`).join('') : '<p class="muted">No services yet.</p>';
+  }
+  async function createService(e) {
+    e.preventDefault();
+    const svc = await HudStore.addService({ icon: s_icon.value.trim(), name: s_name.value.trim(), desc: s_desc.value.trim() });
+    await HudStore.logAudit(USER, 'Added service', svc.name);
+    s_icon.value = s_name.value = s_desc.value = '';
+    await renderServices(); toast('Service added — it is now live on the website');
+    return false;
+  }
+  async function removeService(id, name) {
+    await HudStore.deleteService(id);
+    await HudStore.logAudit(USER, 'Removed service', name);
+    await renderServices(); toast('Service removed');
+  }
+
+  /* ====== offers ====== */
+  async function renderOffers() {
+    const wrap = document.getElementById('offerList');
+    const items = await HudStore.getOffers();
+    wrap.innerHTML = items.length ? items.map(o => `
+      <div class="row-item">
+        <div class="info"><span class="ic">${HudIcons.render('tag', 20)}</span><div><b>${esc(o.title)} ${o.badge ? `<span class="chip" style="margin-left:6px;">${esc(o.badge)}</span>` : ''}</b><span>${esc(o.desc)} ${o.expires ? '· until ' + esc(o.expires) : ''}</span></div></div>
+        <button class="btn btn-danger btn-sm" onclick="removeOffer('${o.id}', '${esc(o.title)}')">Delete</button>
+      </div>`).join('') : '<p class="muted">No offers yet.</p>';
+  }
+  async function createOffer(e) {
+    e.preventDefault();
+    const off = await HudStore.addOffer({ title: o_title.value.trim(), desc: o_desc.value.trim(), badge: o_badge.value.trim(), expires: o_expires.value });
+    await HudStore.logAudit(USER, 'Added offer', off.title);
+    o_title.value = o_desc.value = o_badge.value = o_expires.value = '';
+    await renderOffers(); toast('Offer added — it is now live on the website');
+    return false;
+  }
+  async function removeOffer(id, title) {
+    await HudStore.deleteOffer(id);
+    await HudStore.logAudit(USER, 'Removed offer', title);
+    await renderOffers(); toast('Offer removed');
+  }
+
+  /* ====== surgeries ====== */
+  const SG_PILL = { 'Scheduled': 'admitted', 'Pre-Op': 'examination', 'In Surgery': 'surgery', 'In Recovery': 'treatment', 'Completed': 'recovering', 'Cancelled': 'discharged' };
+  const PRI_PILL = { 'Urgent': 'examination', 'Emergency': 'surgery' };
+  const PAY_PILL = { 'Paid': 'recovering', 'Partially Paid': 'examination', 'Awaiting Payment': 'examination', 'Unpaid': 'surgery' };
+  const CON_PILL = { 'Signed': 'recovering', 'Pending': 'examination', 'Not Signed': 'surgery' };
+  const sel = (opts, cur) => opts.map(o => `<option ${o === cur ? 'selected' : ''}>${o}</option>`).join('');
+  const val = (id) => document.getElementById(id)?.value ?? '';
+  const chk = (id) => !!document.getElementById(id)?.checked;
+  const money = (v) => (v === '' || v == null || isNaN(+v)) ? null : +v;
+
+  function computeDuration(start, end) {
+    if (!start || !end) return '';
+    const ms = new Date(end) - new Date(start);
+    if (!(ms > 0)) return '';
+    const h = Math.floor(ms / 3600000), m = Math.round((ms % 3600000) / 60000);
+    return (h ? h + 'h ' : '') + m + 'm';
+  }
+  function toggleRec(id) {
+    document.getElementById('rec_' + id).classList.toggle('open');
+    const b = document.getElementById('recbtn_' + id);
+    b.textContent = b.textContent.includes('Open') ? 'Close Record' : 'Open Full Record';
+  }
+
+  async function fillPatientSelect() {
+    const pats = await HudStore.getPatients();
+    document.getElementById('sg_patient').innerHTML =
+      '<option value="">Select a patient…</option>' +
+      pats.map(p => `<option value="${p.id}|${esc(p.petName)}">${esc(p.petName)} — ${esc(p.ownerName)}</option>`).join('');
+  }
+
+  async function renderSurgeries() {
+    await fillPatientSelect();
+    const list = document.getElementById('surgeryList');
+    const sgs = await HudStore.getSurgeries();
+
+    const open = ['Scheduled', 'Pre-Op', 'In Surgery', 'In Recovery'];
+    const active = sgs.filter(s => open.includes(s.status)).length;
+    const awaitingPay = sgs.filter(s => s.payment !== 'Paid' && s.status !== 'Cancelled').length;
+    const unsigned = sgs.filter(s => s.consent !== 'Signed' && open.includes(s.status)).length;
+    document.getElementById('srgStats').innerHTML = `
+      <div class="card stat-card"><b>${sgs.length}</b><span>Total Surgeries</span></div>
+      <div class="card stat-card"><b>${active}</b><span>Active Cases</span></div>
+      <div class="card stat-card"><b>${awaitingPay}</b><span>Payment Open</span></div>
+      <div class="card stat-card"><b>${unsigned}</b><span>Consent Missing</span></div>`;
+
+    if (!sgs.length) {
+      list.innerHTML = `<div class="empty"><span class="big">${HudIcons.scalpel}</span>No surgeries scheduled yet.</div>`;
+      return;
+    }
+
+    const CL = HudStore.CHECKLIST_ITEMS;
+    list.innerHTML = sgs.map(s => {
+      const cl = s.checklist || {};
+      const done = CL.filter(([k]) => cl[k]).length;
+      const est = money(s.estCost), tot = money(s.totalCost), dep = money(s.deposit);
+      const balance = (tot ?? est) != null ? ((tot ?? est) - (dep ?? 0)) : null;
+      return `
+      <div class="card pat-card">
+        <div class="pat-head">
+          <div class="pat-id">
+            <div class="pat-avatar">${HudIcons.render('scalpel', 22)}</div>
+            <div>
+              <h3>${esc(s.type)}
+                <span class="pill ${SG_PILL[s.status]}" style="margin-left:8px;">${esc(s.status)}</span>
+                ${PRI_PILL[s.priority] ? `<span class="pill ${PRI_PILL[s.priority]}" style="margin-left:6px;">${esc(s.priority)}</span>` : ''}
+              </h3>
+              <div class="rec-meta">
+                <span>Patient <b>${esc(s.patientName)}</b></span>
+                <span>Surgeon <b>${esc(s.surgeon || s.doctor || '—')}</b></span>
+                <span>${esc(s.category || '')}</span>
+                <span>${esc(s.theatre || '')}</span>
+                ${s.scheduledFor ? `<span>${new Date(s.scheduledFor).toLocaleString('en-AE', { dateStyle: 'medium', timeStyle: 'short' })}</span>` : ''}
+                ${s.duration ? `<span>Took <b>${esc(s.duration)}</b></span>` : (s.estDuration ? `<span>Est. <b>${esc(s.estDuration)}</b></span>` : '')}
+                <span>ASA <b>${esc((s.asa || '').split(' ')[0])}</b></span>
+              </div>
+              <small style="display:inline-flex; gap:8px; margin-top:10px; flex-wrap:wrap; align-items:center;">
+                <span class="prog-chip ${done === CL.length ? 'full' : ''}">Pre-op ${done}/${CL.length}</span>
+                <span class="pill ${PAY_PILL[s.payment]}" style="font-size:10px; padding:4px 11px;">${esc(s.payment)}</span>
+                <span class="pill ${CON_PILL[s.consent]}" style="font-size:10px; padding:4px 11px;">Consent: ${esc(s.consent)}</span>
+                ${s.outcomeGrade ? `<span class="chip">Outcome: ${esc(s.outcomeGrade)}</span>` : ''}
+              </small>
+            </div>
+          </div>
+          <div class="pat-actions">
+            <button class="btn btn-ghost btn-sm" id="recbtn_${s.id}" onclick="toggleRec('${s.id}')">Open Full Record</button>
+            <button class="btn btn-danger btn-sm" onclick="removeSurgery('${s.id}', '${esc(s.type)}', '${esc(s.patientName)}')">Delete</button>
+          </div>
+        </div>
+
+        <div class="rec-details" id="rec_${s.id}">
+          <div class="rec-sec">
+            <h4>Case &amp; Surgical Team</h4>
+            <div class="rec-grid">
+              <div class="field"><label>Status</label><select id="sg_status_${s.id}">${sel(HudStore.SURGERY_STATUSES, s.status)}</select></div>
+              <div class="field"><label>Category</label><select id="sg_cat_${s.id}">${sel(HudStore.SURGERY_CATEGORIES, s.category)}</select></div>
+              <div class="field"><label>Priority</label><select id="sg_pri_${s.id}">${sel(HudStore.SURGERY_PRIORITIES, s.priority)}</select></div>
+              <div class="field"><label>Lead Surgeon</label><input id="sg_sur_${s.id}" value="${esc(s.surgeon || s.doctor || '')}" /></div>
+              <div class="field"><label>Anesthetist</label><input id="sg_ane_${s.id}" value="${esc(s.anesthetist)}" /></div>
+              <div class="field"><label>Assistant / Tech</label><input id="sg_ass_${s.id}" value="${esc(s.assistant)}" /></div>
+              <div class="field"><label>Theatre</label><input id="sg_thr_${s.id}" value="${esc(s.theatre)}" /></div>
+              <div class="field"><label>Scheduled For</label><input id="sg_sch_${s.id}" type="datetime-local" value="${esc(s.scheduledFor)}" /></div>
+              <div class="field"><label>ASA Risk Grade</label><select id="sg_asa_${s.id}">${sel(HudStore.ASA_GRADES, s.asa)}</select></div>
+            </div>
+          </div>
+
+          <div class="rec-sec">
+            <h4>Pre-Op Safety Checklist</h4>
+            <div class="chk-grid">
+              ${CL.map(([k, label]) => `
+                <label class="chk ${cl[k] ? 'done' : ''}"><input type="checkbox" id="sg_cl_${k}_${s.id}" ${cl[k] ? 'checked' : ''} /> ${label}</label>`).join('')}
+              <div class="field" style="margin-top:4px;"><label>Owner Consent Form</label><select id="sg_con_${s.id}">${sel(HudStore.CONSENT_STATUSES, s.consent)}</select></div>
+            </div>
+          </div>
+
+          <div class="rec-sec">
+            <h4>Anesthesia</h4>
+            <div class="field"><label>Protocol / Agents &amp; Monitoring</label><textarea id="sg_anp_${s.id}" rows="2" placeholder="e.g. Propofol induction, isoflurane maintenance; SpO₂, ECG, NIBP monitored…">${esc(s.anesthesiaProtocol)}</textarea></div>
+          </div>
+
+          <div class="rec-sec">
+            <h4>Operation</h4>
+            <div class="rec-grid">
+              <div class="field"><label>Started At</label><input id="sg_st_${s.id}" type="datetime-local" value="${esc(s.startedAt)}" /></div>
+              <div class="field"><label>Ended At</label><input id="sg_en_${s.id}" type="datetime-local" value="${esc(s.endedAt)}" /></div>
+              <div class="field"><label>Duration (auto if times set)</label><input id="sg_dur_${s.id}" placeholder="e.g. 1h 20m" value="${esc(s.duration)}" /></div>
+              <div class="field"><label>Complications</label><select id="sg_cmp_${s.id}">${sel(HudStore.COMPLICATION_LEVELS, s.complications)}</select></div>
+              <div class="field"><label>Estimated Blood Loss</label><input id="sg_ebl_${s.id}" placeholder="e.g. minimal / 15ml" value="${esc(s.bloodLoss)}" /></div>
+              <div class="field"><label>Implants / Materials</label><input id="sg_imp_${s.id}" placeholder="e.g. TPLO plate 2.7mm" value="${esc(s.implants)}" /></div>
+            </div>
+            <div class="field" style="margin-top:14px;"><label>Complication Notes</label><input id="sg_cmn_${s.id}" placeholder="Details if any complications occurred…" value="${esc(s.complicationNotes)}" /></div>
+          </div>
+
+          <div class="rec-sec">
+            <h4>Post-Op &amp; Outcome</h4>
+            <div class="rec-grid">
+              <div class="field"><label>Outcome Grade</label><select id="sg_ogr_${s.id}">${sel([''].concat(HudStore.OUTCOME_GRADES), s.outcomeGrade)}</select></div>
+              <div class="field"><label>Follow-up Visit</label><input id="sg_fu_${s.id}" type="date" value="${esc(s.followUp)}" /></div>
+              <div class="field"><label>Post-op Medication</label><input id="sg_med_${s.id}" placeholder="e.g. Meloxicam 0.1mg/kg SID 5d" value="${esc(s.postOpMeds)}" /></div>
+            </div>
+            <div class="field" style="margin-top:14px;"><label>How did the surgery go?</label><input id="sg_out_${s.id}" placeholder="Summary of the procedure and result…" value="${esc(s.outcome)}" /></div>
+            <div class="form-row" style="margin-top:14px;">
+              <div class="field"><label>Recovery Notes</label><input id="sg_rec_${s.id}" placeholder="Recovery observations…" value="${esc(s.recoveryNotes)}" /></div>
+              <div class="field"><label>Discharge Instructions</label><input id="sg_dis_${s.id}" placeholder="Home care instructions for the owner…" value="${esc(s.dischargeNotes)}" /></div>
+            </div>
+          </div>
+
+          <div class="rec-sec">
+            <h4>Billing</h4>
+            <div class="rec-grid">
+              <div class="field"><label>Estimated Cost (AED)</label><input id="sg_est_${s.id}" type="number" min="0" step="0.01" value="${esc(s.estCost)}" /></div>
+              <div class="field"><label>Final Cost (AED)</label><input id="sg_tot_${s.id}" type="number" min="0" step="0.01" value="${esc(s.totalCost)}" /></div>
+              <div class="field"><label>Deposit Received (AED)</label><input id="sg_dep_${s.id}" type="number" min="0" step="0.01" value="${esc(s.deposit)}" /></div>
+              <div class="field"><label>Payment Status</label><select id="sg_pay_${s.id}">${sel(HudStore.PAYMENT_STATUSES, s.payment)}</select></div>
+              <div class="field"><label>Invoice No.</label><input id="sg_inv_${s.id}" value="${esc(s.invoiceNo)}" placeholder="e.g. INV-2026-014" /></div>
+            </div>
+            ${balance != null ? `<div class="balance-line">Record balance: <b>AED ${balance.toFixed(2)}</b></div>` : ''}
+          </div>
+
+          <div class="rec-sec" style="display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
+            <button class="btn btn-ghost btn-sm" onclick="billSurgery('${s.id}')">Post to Patient Account</button>
+            <button class="btn btn-primary btn-sm" onclick="saveSurgery('${s.id}')">Save Record</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function createSurgery(e) {
+    e.preventDefault();
+    const pv = document.getElementById('sg_patient').value;
+    if (!pv) return false;
+    const [patientId, patientName] = pv.split('|');
+    const sg = await HudStore.addSurgery({
+      patientId, patientName,
+      type: sg_type.value.trim(),
+      category: sg_category.value, priority: sg_priority.value,
+      surgeon: sg_doctor.value.trim(), anesthetist: sg_anesthetist.value.trim(), assistant: sg_assistant.value.trim(),
+      theatre: sg_theatre.value.trim(), scheduledFor: sg_when.value,
+      estDuration: sg_estdur.value.trim(), estCost: sg_estcost.value,
+      notes: sg_notes.value.trim(),
+    });
+    await HudStore.logAudit(USER, 'Scheduled surgery', `${sg.type} (${sg.category}, ${sg.priority}) for ${sg.patientName} — surgeon ${sg.surgeon}, ${sg.theatre}`);
+    ['sg_type', 'sg_doctor', 'sg_anesthetist', 'sg_assistant', 'sg_when', 'sg_estdur', 'sg_estcost', 'sg_notes'].forEach(i => document.getElementById(i).value = '');
+    document.getElementById('sg_patient').value = '';
+    document.getElementById('sg_theatre').value = 'OR 1';
+    await renderSurgeries();
+    toast('Surgery scheduled');
+    return false;
+  }
+
+  async function saveSurgery(id) {
+    const before = await HudStore.getSurgery(id);
+    const startedAt = val('sg_st_' + id), endedAt = val('sg_en_' + id);
+    let duration = val('sg_dur_' + id).trim();
+    const auto = computeDuration(startedAt, endedAt);
+    if (auto && (!duration || duration === before.duration)) duration = auto;
+
+    const checklist = {};
+    HudStore.CHECKLIST_ITEMS.forEach(([k]) => checklist[k] = chk(`sg_cl_${k}_${id}`));
+
+    const fields = {
+      status: val('sg_status_' + id), category: val('sg_cat_' + id), priority: val('sg_pri_' + id),
+      surgeon: val('sg_sur_' + id).trim(), anesthetist: val('sg_ane_' + id).trim(), assistant: val('sg_ass_' + id).trim(),
+      theatre: val('sg_thr_' + id).trim(), scheduledFor: val('sg_sch_' + id), asa: val('sg_asa_' + id),
+      checklist, consent: val('sg_con_' + id),
+      anesthesiaProtocol: val('sg_anp_' + id).trim(),
+      startedAt, endedAt, duration,
+      complications: val('sg_cmp_' + id), complicationNotes: val('sg_cmn_' + id).trim(),
+      bloodLoss: val('sg_ebl_' + id).trim(), implants: val('sg_imp_' + id).trim(),
+      outcomeGrade: val('sg_ogr_' + id), outcome: val('sg_out_' + id).trim(),
+      recoveryNotes: val('sg_rec_' + id).trim(), postOpMeds: val('sg_med_' + id).trim(),
+      followUp: val('sg_fu_' + id), dischargeNotes: val('sg_dis_' + id).trim(),
+      estCost: val('sg_est_' + id), totalCost: val('sg_tot_' + id), deposit: val('sg_dep_' + id),
+      payment: val('sg_pay_' + id), invoiceNo: val('sg_inv_' + id).trim(),
+    };
+    const sg = await HudStore.updateSurgery(id, fields);
+
+    const changes = [];
+    if (before.status !== sg.status) changes.push(`status → ${sg.status}`);
+    if (before.payment !== sg.payment) changes.push(`payment → ${sg.payment}`);
+    if (before.consent !== sg.consent) changes.push(`consent → ${sg.consent}`);
+    if (before.complications !== sg.complications) changes.push(`complications → ${sg.complications}`);
+    if (before.outcomeGrade !== sg.outcomeGrade && sg.outcomeGrade) changes.push(`outcome → ${sg.outcomeGrade}`);
+    if (before.duration !== sg.duration && sg.duration) changes.push(`duration → ${sg.duration}`);
+    const beforeDone = HudStore.CHECKLIST_ITEMS.filter(([k]) => (before.checklist || {})[k]).length;
+    const afterDone = HudStore.CHECKLIST_ITEMS.filter(([k]) => checklist[k]).length;
+    if (beforeDone !== afterDone) changes.push(`pre-op checklist ${afterDone}/${HudStore.CHECKLIST_ITEMS.length}`);
+    await HudStore.logAudit(USER, 'Updated surgical record', `${sg.type} (${sg.patientName})${changes.length ? ': ' + changes.join(', ') : ''}`);
+    await renderSurgeries();
+    document.getElementById('rec_' + id)?.classList.add('open');
+    const b = document.getElementById('recbtn_' + id); if (b) b.textContent = 'Close Record';
+    toast('Surgical record saved');
+  }
+
+  async function removeSurgery(id, type, patientName) {
+    if (!confirm(`Delete "${type}" for ${patientName}?`)) return;
+    await HudStore.deleteSurgery(id);
+    await HudStore.logAudit(USER, 'Deleted surgery', `${type} (${patientName})`);
+    await renderSurgeries();
+    toast('Surgery deleted');
+  }
+
+  /* ====== billing ====== */
+  const AED = v => 'AED ' + (+v).toFixed(2);
+
+  let billFilter = 'all';
+  const openAccounts = new Set();
+
+  function setBillFilter(btn) {
+    billFilter = btn.dataset.f;
+    document.querySelectorAll('#billTabs .ftab').forEach(b => b.classList.toggle('active', b === btn));
+    renderBilling();
+  }
+  function toggleAcct(pid) {
+    openAccounts.has(pid) ? openAccounts.delete(pid) : openAccounts.add(pid);
+    document.getElementById('acct_' + pid)?.classList.toggle('open');
+  }
+
+  /* status -> [label, pillClass, filterCategory] */
+  function acctStatus(bal) {
+    const today = new Date().toISOString().slice(0, 10);
+    if (bal.balance < 0) return ['In Credit', 'admitted', 'settled'];
+    if (bal.balance === 0 && bal.charged > 0) return ['Settled', 'recovering', 'settled'];
+    if (bal.balance > 0 && bal.nextDue && bal.nextDue < today) return ['Overdue', 'surgery', 'overdue'];
+    if (bal.balance > 0 && bal.nextDue) return ['Pay Later', 'examination', 'later'];
+    if (bal.balance > 0) return ['Outstanding', 'surgery', 'due'];
+    return ['No Charges', 'discharged', 'settled'];
+  }
+
+  async function renderBilling() {
+    const [txs, balances, pats] = await Promise.all([HudStore.getTransactions(), HudStore.getBalances(), HudStore.getPatients()]);
+
+    /* ---- overview stats ---- */
+    const billed = txs.filter(t => t.kind === 'charge').reduce((a, t) => a + t.amount, 0);
+    const collected = txs.filter(t => t.kind === 'payment').reduce((a, t) => a + t.amount, 0);
+    const outstanding = Object.values(balances).reduce((a, b) => a + Math.max(0, b.balance), 0);
+    const openCount = Object.values(balances).filter(b => b.balance > 0).length;
+    document.getElementById('billStats').innerHTML = `
+      <div class="card stat-card"><b>${AED(billed)}</b><span>Total Billed</span></div>
+      <div class="card stat-card"><b>${AED(collected)}</b><span>Collected</span></div>
+      <div class="card stat-card"><b>${AED(outstanding)}</b><span>Outstanding</span></div>
+      <div class="card stat-card"><b>${openCount}</b><span>Accounts with Balance</span></div>`;
+
+    /* ---- account rows ---- */
+    const list = document.getElementById('accountList');
+    const q = (document.getElementById('billSearch').value || '').toLowerCase().trim();
+    let patIds = Object.keys(balances);
+
+    if (!patIds.length) {
+      list.innerHTML = `<div class="empty"><span class="big">${HudIcons.wallet}</span>No billing activity yet.<br/>Use “Add Charge” to open a patient's account.</div>`;
+      return;
+    }
+
+    const rows = patIds.map(pid => {
+      const bal = balances[pid];
+      const pat = pats.find(p => p.id === pid);
+      const ptxs = txs.filter(t => t.patientId === pid);
+      const name = pat ? pat.petName : (ptxs[0]?.patientName || 'Unknown');
+      const owner = pat ? pat.ownerName : '';
+      const [stLabel, stClass, stCat] = acctStatus(bal);
+      return { pid, bal, ptxs, name, owner, stLabel, stClass, stCat };
+    })
+    .filter(r => billFilter === 'all' || r.stCat === billFilter)
+    .filter(r => !q || r.name.toLowerCase().includes(q) || r.owner.toLowerCase().includes(q))
+    .sort((a, b) => b.bal.balance - a.bal.balance);
+
+    if (!rows.length) {
+      list.innerHTML = `<div class="empty">No accounts match this view.</div>`;
+      return;
+    }
+
+    list.innerHTML = rows.map(r => `
+      <div class="card acct ${openAccounts.has(r.pid) ? 'open' : ''}" id="acct_${r.pid}">
+        <button class="acct-row" onclick="toggleAcct('${r.pid}')">
+          <span class="pat-avatar" style="width:44px; height:44px; font-size:20px;">${esc(r.name.charAt(0).toUpperCase())}</span>
+          <span><span class="nm">${esc(r.name)}</span><div class="ow">${r.owner ? esc(r.owner) : ''}${r.bal.nextDue && r.bal.balance > 0 ? ' · due ' + esc(r.bal.nextDue) : ''}</div></span>
+          <span class="pill ${r.stClass}">${r.stLabel}</span>
+          <span class="acct-balance">
+            <b style="color:${r.bal.balance > 0 ? '#d89aa8' : '#9ed0b3'};">${AED(Math.abs(r.bal.balance))}</b>
+            <span>${r.bal.balance > 0 ? 'due' : r.bal.balance < 0 ? 'credit' : 'settled'}</span>
+          </span>
+          <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></span>
+        </button>
+        <div class="acct-body">
+          <div class="acct-summary">
+            <span>Billed <b>${AED(r.bal.charged)}</b></span>
+            <span>Paid <b>${AED(r.bal.paid)}</b></span>
+            <span>Transactions <b>${r.ptxs.length}</b></span>
+          </div>
+          <div>
+            ${r.ptxs.map(t => `
+              <div class="trx">
+                <time>${fmt(t.at)}</time>
+                <div class="desc"><b>${t.kind === 'charge' ? esc(t.description) : 'Payment received'}</b>
+                  ${t.kind === 'payment' && t.description ? `<span>${esc(t.description)}</span>` : ''}
+                  ${t.kind === 'charge' && t.dueDate ? `<span>Due ${esc(t.dueDate)}</span>` : ''}</div>
+                <span class="mth">${t.kind === 'payment' ? esc(t.method || '') : ''}</span>
+                <span class="amt ${t.kind}">${t.kind === 'charge' ? '+' : '−'} ${AED(t.amount)}</span>
+                <button class="btn btn-danger btn-sm" style="padding:5px 12px;" onclick="removeTrx('${t.id}', '${esc(r.name)}')">✕</button>
+              </div>`).join('')}
+          </div>
+          <div class="acct-actions">
+            ${r.bal.balance > 0 ? `
+              <input id="qp_amt_${r.pid}" type="number" min="0.01" step="0.01" style="max-width:150px;" value="${r.bal.balance.toFixed(2)}" />
+              <select id="qp_mth_${r.pid}" style="max-width:160px;">${HudStore.PAYMENT_METHODS.map(m => `<option>${m}</option>`).join('')}</select>
+              <button class="btn btn-primary btn-sm" onclick="quickPay('${r.pid}', '${esc(r.name)}')">Settle ${AED(r.bal.balance)}</button>` : ''}
+            <button class="btn btn-ghost btn-sm" onclick="openBillModal('charge', '${r.pid}')">+ Charge</button>
+            <button class="btn btn-ghost btn-sm" onclick="openBillModal('payment', '${r.pid}')">+ Payment</button>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  /* ---- charge / payment modal ---- */
+  let billMode = 'charge';
+  async function openBillModal(mode, presetPid) {
+    billMode = mode;
+    const pats = await HudStore.getPatients();
+    document.getElementById('bm_patient').innerHTML = '<option value="">Select a patient…</option>' +
+      pats.map(p => `<option value="${p.id}|${esc(p.petName)}" ${p.id === presetPid ? 'selected' : ''}>${esc(p.petName)} — ${esc(p.ownerName)}</option>`).join('');
+    document.getElementById('bm_method').innerHTML = HudStore.PAYMENT_METHODS.map(m => `<option>${m}</option>`).join('');
+    document.getElementById('bm_title').textContent = mode === 'charge' ? 'Add Charge' : 'Record Payment';
+    document.getElementById('bm_sub').textContent = mode === 'charge'
+      ? 'Bill a treatment, product or service to the patient\'s account. Set a due date to allow paying later.'
+      : 'Log money received from the owner against the patient\'s account.';
+    document.getElementById('bm_submit').textContent = mode === 'charge' ? 'Add Charge' : 'Record Payment';
+    document.getElementById('bm_chargeFields').style.display = mode === 'charge' ? '' : 'none';
+    document.getElementById('bm_paymentFields').style.display = mode === 'payment' ? '' : 'none';
+    document.getElementById('billModal').classList.add('open');
+  }
+  function closeBillModal() {
+    document.getElementById('billModal').classList.remove('open');
+    ['bm_desc', 'bm_amount_c', 'bm_due', 'bm_amount_p', 'bm_note'].forEach(i => document.getElementById(i).value = '');
+  }
+  async function submitBillModal(e) {
+    e.preventDefault();
+    const pv = document.getElementById('bm_patient').value;
+    if (!pv) { toast('Select a patient'); return false; }
+    const [patientId, patientName] = pv.split('|');
+    if (billMode === 'charge') {
+      const desc = bm_desc.value.trim(), amt = bm_amount_c.value;
+      if (!desc || !amt || +amt <= 0) { toast('Enter a description and amount'); return false; }
+      const t = await HudStore.addCharge({ patientId, patientName, description: desc, amount: amt, dueDate: bm_due.value });
+      await HudStore.logAudit(USER, 'Added charge', `${AED(t.amount)} — ${t.description} (${patientName})${t.dueDate ? ', due ' + t.dueDate : ''}`);
+      toast('Charge added');
+    } else {
+      const amt = bm_amount_p.value;
+      if (!amt || +amt <= 0) { toast('Enter an amount'); return false; }
+      const t = await HudStore.addPayment({ patientId, patientName, amount: amt, method: bm_method.value, note: bm_note.value.trim() });
+      await HudStore.logAudit(USER, 'Recorded payment', `${AED(t.amount)} via ${t.method} (${patientName})`);
+      toast('Payment recorded');
+    }
+    openAccounts.add(patientId);
+    closeBillModal();
+    await renderBilling(); await renderPatients();
+    return false;
+  }
+
+  async function quickPay(pid, name) {
+    const amt = document.getElementById('qp_amt_' + pid).value;
+    if (!amt || +amt <= 0) { toast('Enter a valid amount'); return; }
+    const method = document.getElementById('qp_mth_' + pid).value;
+    const t = await HudStore.addPayment({ patientId: pid, patientName: name, amount: amt, method });
+    await HudStore.logAudit(USER, 'Recorded payment', `${AED(t.amount)} via ${method} (${name})`);
+    await renderBilling(); await renderPatients();
+    toast('Payment recorded');
+  }
+
+  async function removeTrx(id, name) {
+    if (!confirm('Delete this transaction? This changes the account balance.')) return;
+    const txs = await HudStore.getTransactions();
+    const t = txs.find(x => x.id === id);
+    await HudStore.deleteTransaction(id);
+    await HudStore.logAudit(USER, 'Deleted transaction', t ? `${t.kind} ${AED(t.amount)} (${name})` : name);
+    await renderBilling(); await renderPatients();
+    toast('Transaction deleted');
+  }
+
+  /* post surgery cost to patient account */
+  async function billSurgery(id) {
+    const sg = await HudStore.getSurgery(id);
+    if (!sg) return;
+    const amount = sg.totalCost || sg.estCost;
+    if (!amount || +amount <= 0) { toast('Set a final or estimated cost first'); return; }
+    const existing = (await HudStore.getTransactions(sg.patientId)).find(t => t.ref === sg.id);
+    if (existing) { toast('This surgery is already on the patient\'s account'); return; }
+    const t = await HudStore.addCharge({
+      patientId: sg.patientId, patientName: sg.patientName,
+      description: `Surgery: ${sg.type}${sg.invoiceNo ? ' (' + sg.invoiceNo + ')' : ''}`,
+      amount, ref: sg.id,
+    });
+    await HudStore.logAudit(USER, 'Added charge', `${AED(t.amount)} — ${t.description} (${sg.patientName})`);
+    openAccounts.add(sg.patientId);
+    await renderBilling(); await renderPatients();
+    toast(`Surgery billed to ${sg.patientName}'s account`);
+  }
+
+  /* ====== admins (super only) ====== */
+  async function renderAdmins() {
+    const wrap = document.getElementById('adminList');
+    const users = await HudStore.getUsers();
+    wrap.innerHTML = users.map(u => `
+      <div class="row-item">
+        <div class="info">
+          <span class="ic">${HudIcons.render(u.role === 'super' ? 'scan' : 'paw', 19)}</span>
+          <div><b>${esc(u.name)} ${u.role === 'super' ? '<span class="chip" style="margin-left:6px;">Super Admin</span>' : ''}</b>
+          <span>@${esc(u.username)} · added ${fmt(u.createdAt)}</span></div>
+        </div>
+        ${u.role === 'super' ? '' : `<button class="btn btn-danger btn-sm" onclick="removeAdmin('${u.id}', '${esc(u.name)}')">Remove</button>`}
+      </div>`).join('');
+  }
+  async function createAdmin(e) {
+    e.preventDefault();
+    try {
+      const u = await HudStore.addUser({ name: a_name.value, username: a_user.value, password: a_pw.value }, USER);
+      a_name.value = a_user.value = a_pw.value = '';
+      await renderAdmins(); toast(`Admin account created for ${u.name}`);
+    } catch (err) { toast(err.message); }
+    return false;
+  }
+  async function removeAdmin(id, name) {
+    if (!confirm(`Remove ${name}'s admin access?`)) return;
+    await HudStore.deleteUser(id, USER);
+    await renderAdmins(); toast('Admin removed');
+  }
+  async function changeMyPassword() {
+    const pw = document.getElementById('cp_pw').value;
+    if (pw.length < 6) { toast('Password must be at least 6 characters'); return; }
+    await HudStore.changePassword(USER.id, pw, USER);
+    document.getElementById('cp_pw').value = '';
+    toast('Password updated');
+  }
+
+  /* ====== audit trail (super only) ====== */
+  async function renderAudit() {
+    const wrap = document.getElementById('auditList');
+    const logs = await HudStore.getAudit(300);
+    wrap.innerHTML = logs.length ? logs.map(l => `
+      <div class="log-item">
+        <time>${fmt(l.at)}</time>
+        <div class="who"><b>${esc(l.actorName)}</b><span>${l.actorRole === 'super' ? 'Super Admin' : 'Admin'}</span></div>
+        <div class="what"><b>${esc(l.action)}</b>${l.details ? `<span>${esc(l.details)}</span>` : ''}</div>
+      </div>`).join('') : '<p class="muted">No activity recorded yet.</p>';
+  }
+
+  applySession();
+</script>
+</body>
+</html>
