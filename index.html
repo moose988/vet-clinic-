@@ -25,14 +25,14 @@
   .hero .lead { font-size: clamp(16px, 1.6vw, 19px); color: rgba(240,239,234,.78); max-width: 54ch; margin-bottom: 42px; }
   .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 84px; }
 
-  .hero-strip { border-top: 1px solid rgba(255,255,255,.14); backdrop-filter: blur(6px);
-    display: grid; grid-template-columns: repeat(4, 1fr); }
-  .hero-strip .cell { padding: 30px 28px; border-right: 1px solid rgba(255,255,255,.12); }
-  .hero-strip .cell:last-child { border-right: none; }
-  .hero-strip b { display: block; font-family: var(--font-display); font-size: 30px; font-weight: 600; color: var(--ivory); }
-  .hero-strip b em { font-family: var(--font-serif); font-style: italic; color: var(--accent); }
-  .hero-strip span { font-size: 11.5px; color: rgba(240,239,234,.55); letter-spacing: .2em; text-transform: uppercase; }
-  @media (max-width: 880px) { .hero-strip { grid-template-columns: repeat(2, 1fr); } .hero-strip .cell:nth-child(2) { border-right: none; } }
+  .stats-strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface); }
+  .stats-strip .cell { padding: 30px 28px; border-right: 1px solid var(--line); }
+  .stats-strip .cell:last-child { border-right: none; }
+  .stats-strip b { display: block; font-family: var(--font-display); font-size: 30px; font-weight: 600; color: var(--ivory); }
+  .stats-strip b em { font-family: var(--font-serif); font-style: italic; color: var(--accent); }
+  .stats-strip span { font-size: 11.5px; color: var(--muted); letter-spacing: .2em; text-transform: uppercase; }
+  @media (max-width: 880px) { .stats-strip { grid-template-columns: repeat(2, 1fr); } .stats-strip .cell:nth-child(2) { border-right: none; } }
 
   /* ================= SERVICES — editorial list ================= */
   .svc-list { border-top: 1px solid var(--line); counter-reset: svc; }
@@ -111,9 +111,66 @@
   .contact-line b { font-family: var(--font-display); display: block; font-size: 14.5px; margin-bottom: 2px; }
   .contact-line span, .contact-line a { color: var(--muted); font-size: 14px; text-decoration: none; transition: color .25s; }
   .contact-line a:hover { color: var(--accent); }
-  .map-frame { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; min-height: 380px;
-    filter: grayscale(1) invert(.92) contrast(.9) brightness(.9); }
+  .map-frame { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; min-height: 380px; }
   .map-frame iframe { width: 100%; height: 100%; min-height: 380px; border: 0; }
+
+  /* ================= NAV — transparent over hero video only ================= */
+  .nav { transition: background 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease; }
+  .nav.nav--top {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: none;
+  }
+  .nav.nav--top .nav-links a {
+    color: #fff;
+    font-weight: 700;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+  }
+  .nav.nav--top .nav-links a:hover { color: var(--accent); }
+  .nav.nav--top .logo { color: #fff; }
+  .nav.nav--top .btn-ghost {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.35);
+    font-weight: 700;
+  }
+  .nav.nav--top .btn-ghost:hover {
+    color: var(--accent);
+    border-color: var(--line-bright);
+  }
+
+  /* ================= CONTACT POPUP ================= */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .modal-bg { position: fixed; inset: 0; z-index: 90; background: rgba(8, 8, 12, 0.75); backdrop-filter: blur(10px);
+    display: none; place-items: center; padding: 20px; }
+  .modal-bg.open { display: grid; }
+  .modal { width: min(480px, 100%); background: var(--bg-2); border: 1px solid var(--line-bright); border-radius: 22px; padding: 34px;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7); animation: fadeUp 0.3s ease; position: relative; }
+  .modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
+  .modal-head h3 { font-size: 21px; margin: 0; }
+  .modal-head p { color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .modal-close { width: 36px; height: 36px; flex: none; border-radius: 50%; border: 1px solid var(--line); background: transparent;
+    color: var(--muted); cursor: pointer; display: grid; place-items: center; transition: all 0.25s; }
+  .modal-close:hover { color: var(--ivory); border-color: var(--line-bright); }
+  .modal-close svg { width: 16px; height: 16px; }
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .contact-form .field { margin: 0; }
+  .btn-whatsapp {
+    width: 100%;
+    margin-top: 8px;
+    background: #25d366;
+    color: #fff;
+    border-color: #25d366;
+    font-weight: 700;
+  }
+  .btn-whatsapp:hover {
+    background: #1ebe57;
+    border-color: #1ebe57;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(37, 211, 102, 0.28);
+  }
+  .btn-whatsapp svg { width: 18px; height: 18px; }
 </style>
 </head>
 <body>
@@ -121,16 +178,16 @@
 <div class="bg-grid"></div>
 
 <!-- ================= NAV ================= -->
-<nav class="nav">
+<nav class="nav nav--top" id="mainNav">
   <div class="container nav-inner">
-    <a class="logo" href="#"><span class="logo-mark" id="logoPaw"></span> Al Hud Hud</a>
+    <a class="logo" href="#"><img class="logo-img" src="assets/img/logo.png" alt="Al Hud Hud Veterinary Clinic" /> Al Hud Hud</a>
     <ul class="nav-links">
       <li><a href="#services">Services</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#offers">Offers</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <a class="btn btn-ghost btn-sm" href="tel:+971505256568">050 525 6568</a>
+    <button type="button" class="btn btn-ghost btn-sm" id="openContactBtn">Contact</button>
   </div>
 </nav>
 
@@ -144,20 +201,12 @@
   </div>
   <div class="hero-content">
     <div class="container">
-      <span class="kicker">Veterinary Clinic — Sharjah</span>
+      <span class="kicker">Al Hud Hud Veterinary Clinic</span>
       <h1>Exceptional care for the ones who love you <span class="serif">unconditionally</span></h1>
       <p class="lead">Al Hud Hud Veterinary Clinic pairs advanced medicine with genuine devotion — complete diagnostics, surgery and wellness under one roof, with live treatment updates sent to your phone.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="tel:+971505256568">Book a Visit</a>
         <a class="btn btn-ghost" href="#services">Explore Services</a>
-      </div>
-    </div>
-    <div class="container">
-      <div class="hero-strip">
-        <div class="cell"><b>4.7<em>★</em></b><span>Google rating</span></div>
-        <div class="cell"><b>8<em>+</em></b><span>Specialised services</span></div>
-        <div class="cell"><b>Live</b><span>Patient tracking</span></div>
-        <div class="cell"><b>1<em>:</em>1</b><span>Devoted attention</span></div>
       </div>
     </div>
   </div>
@@ -166,6 +215,13 @@
 <!-- ================= MARQUEE ================= -->
 <div class="marquee">
   <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<div class="stats-strip">
+  <div class="cell"><b>4.7<em>★</em></b><span>Google rating</span></div>
+  <div class="cell"><b>8<em>+</em></b><span>Specialised services</span></div>
+  <div class="cell"><b>Live</b><span>Patient tracking</span></div>
+  <div class="cell"><b>1<em>:</em>1</b><span>Devoted attention</span></div>
 </div>
 
 <!-- ================= SERVICES ================= -->
@@ -273,18 +329,60 @@
 <footer>
   <div class="container footer-inner">
     <span>© <span id="yr"></span> Al Hud Hud Veterinary Clinic — Sharjah, UAE</span>
-    <span><a href="admin.html" style="text-decoration:none;">Staff portal</a></span>
+    <a class="footer-ig" href="https://instagram.com/hudhudpetclinic" target="_blank" rel="noopener" aria-label="Instagram @hudhudpetclinic">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      @hudhudpetclinic
+    </a>
+    <a href="admin.html">Staff portal</a>
   </div>
 </footer>
 
 <div class="toast" id="toast"></div>
+
+<!-- ================= CONTACT POPUP ================= -->
+<div class="modal-bg" id="contactModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-labelledby="contactModalTitle" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <h3 id="contactModalTitle">Get in touch</h3>
+        <p>Share your details and we'll reach out shortly.</p>
+      </div>
+      <button type="button" class="modal-close" id="closeContactBtn" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <form class="contact-form" id="contactForm" onsubmit="return false;">
+      <div class="field">
+        <label for="contactName">Full name</label>
+        <input type="text" id="contactName" name="name" placeholder="Your name" required />
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="contactPhone">Phone</label>
+          <input type="tel" id="contactPhone" name="phone" placeholder="050 000 0000" required />
+        </div>
+        <div class="field">
+          <label for="contactEmail">Email</label>
+          <input type="email" id="contactEmail" name="email" placeholder="you@email.com" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="contactMessage">Message</label>
+        <textarea id="contactMessage" name="message" rows="4" placeholder="How can we help you and your pet?"></textarea>
+      </div>
+      <button type="button" class="btn btn-whatsapp" id="whatsappContactBtn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Send via WhatsApp
+      </button>
+    </form>
+  </div>
+</div>
 
 <script src="assets/js/config.js"></script>
 <script src="assets/js/store.js"></script>
 <script src="assets/js/icons.js"></script>
 <script>
   document.getElementById('yr').textContent = new Date().getFullYear();
-  document.getElementById('logoPaw').innerHTML = HudIcons.paw;
   document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = HudIcons.render(el.dataset.icon); });
 
   function esc(s) { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
@@ -338,6 +436,78 @@
   renderServices().then(observeReveals);
   renderOffers();
   observeReveals();
+
+  /* ---------- nav: transparent on hero, solid on scroll ---------- */
+  const mainNav = document.getElementById('mainNav');
+  const hero = document.querySelector('.hero');
+
+  function updateNavOnScroll() {
+    const pastHero = window.scrollY > hero.offsetHeight - mainNav.offsetHeight;
+    mainNav.classList.toggle('nav--top', !pastHero);
+  }
+
+  window.addEventListener('scroll', updateNavOnScroll, { passive: true });
+  window.addEventListener('resize', updateNavOnScroll);
+  updateNavOnScroll();
+
+  /* ---------- contact popup ---------- */
+  const contactModal = document.getElementById('contactModal');
+  const contactForm = document.getElementById('contactForm');
+  const WHATSAPP_NUMBER = '971505256568';
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  function openContactModal() {
+    contactModal.classList.add('open');
+    contactModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('contactName').focus();
+  }
+
+  function closeContactModal() {
+    contactModal.classList.remove('open');
+    contactModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  function sendContactWhatsApp() {
+    const name = document.getElementById('contactName').value.trim();
+    const phone = document.getElementById('contactPhone').value.trim();
+    const email = document.getElementById('contactEmail').value.trim();
+    const message = document.getElementById('contactMessage').value.trim();
+
+    if (!name || !phone) {
+      showToast('Please enter your name and phone number.');
+      return;
+    }
+
+    const text = [
+      'Hello Al Hud Hud Veterinary Clinic,',
+      '',
+      `Name: ${name}`,
+      `Phone: ${phone}`,
+      `Email: ${email || 'Not provided'}`,
+      '',
+      'Message:',
+      message || 'I would like to get in touch.'
+    ].join('\n');
+
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+  }
+
+  document.getElementById('openContactBtn').addEventListener('click', openContactModal);
+  document.getElementById('closeContactBtn').addEventListener('click', closeContactModal);
+  document.getElementById('whatsappContactBtn').addEventListener('click', sendContactWhatsApp);
+  contactModal.addEventListener('click', e => { if (e.target === contactModal) closeContactModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && contactModal.classList.contains('open')) closeContactModal();
+  });
 </script>
 </body>
 </html>

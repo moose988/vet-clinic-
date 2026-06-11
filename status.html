@@ -22,7 +22,9 @@
   .live-badge { display: inline-flex; align-items: center; gap: 9px; padding: 8px 18px; border-radius: 999px;
     border: 1px solid var(--line); background: var(--surface); font-size: 11.5px; font-weight: 600;
     letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+  .live-badge.is-live { color: #6ee7a0; border-color: rgba(110, 231, 160, 0.4); background: rgba(52, 211, 153, 0.1); }
   .live-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: breathe 2.4s ease-in-out infinite; }
+  .live-badge.is-live .dot { background: #34d399; box-shadow: 0 0 12px rgba(52, 211, 153, 0.75); }
   @keyframes breathe { 0%,100% { opacity: 1; transform: scale(1);} 50% { opacity: .45; transform: scale(.8);} }
 
   /* ---------- pet hero ---------- */
@@ -32,10 +34,12 @@
   .pet-hero > * { position: relative; z-index: 2; }
 
   /* species photo banner */
-  .hero-photo { margin: 0 -36px 0; height: 168px; position: relative; overflow: hidden; z-index: 0 !important; }
-  .hero-photo img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.8) brightness(.75); }
-  .hero-photo::after { content: ''; position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(13,13,18,.25), rgba(13,13,18,.96) 92%); }
+  .hero-photo { margin: 0 -36px 0; min-height: 200px; max-height: 280px; position: relative; overflow: hidden; z-index: 0 !important;
+    display: flex; align-items: center; justify-content: center; background: var(--bg-2); }
+  .hero-photo img { width: 100%; height: auto; max-height: 280px; object-fit: contain; object-position: center;
+    filter: saturate(.85) brightness(.9); display: block; }
+  .hero-photo::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(13,13,18,.08), rgba(13,13,18,.55) 75%, rgba(13,13,18,.88) 100%); }
 
   /* floating paw prints */
   .paw-field { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1 !important; }
@@ -51,7 +55,7 @@
   /* mascot */
   .monogram { width: 104px; height: 104px; border-radius: 50%; margin: -52px auto 22px; display: grid; place-items: center;
     font-family: var(--font-serif); font-style: italic; font-size: 44px; color: var(--accent);
-    border: 1px solid var(--line-bright); position: relative; background: #14141b;
+    border: 1px solid var(--line-bright); position: relative; background: var(--bg-2);
     box-shadow: 0 14px 40px rgba(0,0,0,.45); }
   .monogram::after { content: ''; position: absolute; inset: -9px; border-radius: 50%;
     border: 1px solid rgba(214,184,138,.18); }
@@ -123,7 +127,7 @@
 
 <nav class="nav">
   <div class="container nav-inner">
-    <a class="logo" href="index.html"><span class="logo-mark" data-paw></span> Al Hud Hud</a>
+    <a class="logo" href="index.html"><img class="logo-img" src="assets/img/logo.png" alt="Al Hud Hud Veterinary Clinic" /> Al Hud Hud</a>
     <a class="btn btn-ghost btn-sm" href="tel:+971505256568">Call Clinic</a>
   </div>
 </nav>
@@ -138,6 +142,10 @@
 <footer>
   <div class="container footer-inner" style="justify-content:center;">
     <span>Al Hud Hud Veterinary Clinic — Sharjah, UAE</span>
+    <a class="footer-ig" href="https://instagram.com/hudhudpetclinic" target="_blank" rel="noopener" aria-label="Instagram @hudhudpetclinic">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      @hudhudpetclinic
+    </a>
   </div>
 </footer>
 
@@ -145,7 +153,6 @@
 <script src="assets/js/store.js"></script>
 <script src="assets/js/icons.js"></script>
 <script>
-  document.querySelectorAll('[data-paw]').forEach(el => el.innerHTML = HudIcons.paw);
 
   const PILL = {
     'Admitted': 'admitted', 'Under Examination': 'examination', 'In Treatment': 'treatment',
@@ -246,7 +253,7 @@
     const photo = PHOTOS[sk] || PHOTOS.other;
 
     const badge = mode === 'live'
-      ? `<span class="live-badge"><span class="dot"></span> Live — updates automatically</span>`
+      ? `<span class="live-badge is-live"><span class="dot"></span> Live — updates automatically</span>`
       : `<span class="live-badge" style="opacity:.85;">Status as of ${fmt(tl[0]?.at || pet.createdAt)}</span>`;
 
     el.innerHTML = `

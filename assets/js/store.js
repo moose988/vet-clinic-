@@ -121,6 +121,25 @@ const HudStore = (() => {
       if (LIVE) { await this.getServices(); await rPut('services/' + svc.id, svc); return svc; }
       const db = _read(); db.services.push(svc); _write(db); return svc;
     },
+    async updateService(id, { icon, name, desc }) {
+      if (LIVE) {
+        const svc = await rGet('services/' + id);
+        if (!svc) return null;
+        if (icon !== undefined) svc.icon = icon;
+        if (name !== undefined) svc.name = name;
+        if (desc !== undefined) svc.desc = desc;
+        await rPut('services/' + id, svc);
+        return svc;
+      }
+      const db = _read();
+      const i = db.services.findIndex(s => s.id === id);
+      if (i === -1) return null;
+      if (icon !== undefined) db.services[i].icon = icon;
+      if (name !== undefined) db.services[i].name = name;
+      if (desc !== undefined) db.services[i].desc = desc;
+      _write(db);
+      return db.services[i];
+    },
     async deleteService(id) {
       if (LIVE) return rDel('services/' + id);
       const db = _read(); db.services = db.services.filter(s => s.id !== id); _write(db);

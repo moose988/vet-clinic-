@@ -9,9 +9,116 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/css/app.css" />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d6b88a' stroke-width='1.5'><circle cx='8' cy='7' r='2.2'/><circle cx='16' cy='7' r='2.2'/><circle cx='4.5' cy='12' r='2'/><circle cx='19.5' cy='12' r='2'/><path d='M12 11c-2.8 0-5.5 3-5.5 5.6 0 1.6 1.2 2.4 2.6 2.4 1.1 0 1.9-.6 2.9-.6s1.8.6 2.9.6c1.4 0 2.6-.8 2.6-2.4C17.5 14 14.8 11 12 11Z'/></svg>" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='1.5'><circle cx='8' cy='7' r='2.2'/><circle cx='16' cy='7' r='2.2'/><circle cx='4.5' cy='12' r='2'/><circle cx='19.5' cy='12' r='2'/><path d='M12 11c-2.8 0-5.5 3-5.5 5.6 0 1.6 1.2 2.4 2.6 2.4 1.1 0 1.9-.6 2.9-.6s1.8.6 2.9.6c1.4 0 2.6-.8 2.6-2.4C17.5 14 14.8 11 12 11Z'/></svg>" />
 <style>
-  body { padding-top: 78px; }
+  /* ====== Admin-only enterprise SaaS palette ====== */
+  body.admin-page {
+    --admin-bg: #f6f8fb;
+    --admin-bg-2: #ffffff;
+    --admin-surface: #ffffff;
+    --admin-surface-2: #f1f5f9;
+    --admin-text: #0f172a;
+    --admin-muted: #64748b;
+    --admin-soft-muted: #94a3b8;
+    --admin-accent: #2563eb;
+    --admin-accent-2: #3b82f6;
+    --admin-success: #16a34a;
+    --admin-warning: #f59e0b;
+    --admin-danger: #dc2626;
+    --admin-line: #e2e8f0;
+    --admin-line-bright: #cbd5e1;
+    --admin-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+    --admin-shadow-soft: 0 8px 24px rgba(15, 23, 42, 0.06);
+    --admin-radius: 18px;
+    --admin-grad: linear-gradient(135deg, #2563eb 0%, #3b82f6 55%, #60a5fa 100%);
+    --bg: var(--admin-bg);
+    --bg-2: var(--admin-bg-2);
+    --surface: var(--admin-surface);
+    --surface-2: var(--admin-surface-2);
+    --text: var(--admin-text);
+    --muted: var(--admin-muted);
+    --accent: var(--admin-accent);
+    --accent-deep: #1d4ed8;
+    --accent-2: var(--admin-accent-2);
+    --accent-3: var(--admin-accent);
+    --ivory: #ffffff;
+    --grad: var(--admin-grad);
+    --line: var(--admin-line);
+    --line-bright: var(--admin-line-bright);
+    --radius: var(--admin-radius);
+    background: var(--admin-bg);
+    color: var(--admin-text);
+    padding-top: 78px;
+  }
+  body.admin-page ::selection { background: rgba(37, 99, 235, 0.15); }
+  body.admin-page .bg-fx {
+    background:
+      radial-gradient(1100px 700px at 80% -15%, rgba(37, 99, 235, 0.04), transparent 60%),
+      radial-gradient(900px 600px at -15% 40%, rgba(59, 130, 246, 0.03), transparent 60%),
+      var(--admin-bg);
+  }
+  body.admin-page .bg-grid {
+    opacity: 0.22;
+    background-image:
+      linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 15%, transparent 70%);
+  }
+  body.admin-page .nav {
+    background: rgba(255, 255, 255, 0.92);
+    border-bottom: 1px solid var(--admin-line);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+  body.admin-page .logo { color: var(--admin-text); }
+  body.admin-page .grad-text { background: var(--admin-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  body.admin-page .btn-primary { background: var(--admin-accent); color: #fff; border-color: transparent; }
+  body.admin-page .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(37, 99, 235, 0.28); }
+  body.admin-page .btn-ghost { color: var(--admin-text); border-color: var(--admin-line); background: #fff; }
+  body.admin-page .btn-ghost:hover { border-color: #93c5fd; background: #eff6ff; color: var(--admin-accent); }
+  body.admin-page .btn-danger { color: var(--admin-danger); border-color: #fecaca; background: #fff; }
+  body.admin-page .btn-danger:hover { background: #fef2f2; border-color: #f87171; color: #b91c1c; }
+  body.admin-page .card {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-line);
+    box-shadow: var(--admin-shadow-soft);
+    backdrop-filter: none;
+  }
+  body.admin-page .card:hover { border-color: var(--admin-line-bright); background: var(--admin-surface); }
+  body.admin-page .chip { color: #1d4ed8; border-color: #bfdbfe; background: #eff6ff; }
+  body.admin-page .pill::before { box-shadow: none; opacity: 0.85; }
+  body.admin-page .pill.admitted    { color: #475569; border-color: #e2e8f0; background: #f1f5f9; }
+  body.admin-page .pill.examination { color: #b45309; border-color: #fde68a; background: #fffbeb; }
+  body.admin-page .pill.treatment   { color: #1d4ed8; border-color: #bfdbfe; background: #eff6ff; }
+  body.admin-page .pill.surgery     { color: #dc2626; border-color: #fecaca; background: #fef2f2; }
+  body.admin-page .pill.recovering  { color: #15803d; border-color: #bbf7d0; background: #f0fdf4; }
+  body.admin-page .pill.pickup      { color: #047857; border-color: #a7f3d0; background: #ecfdf5; }
+  body.admin-page .pill.discharged  { color: #64748b; border-color: #e2e8f0; background: #f8fafc; }
+  body.admin-page input,
+  body.admin-page select,
+  body.admin-page textarea {
+    background: #fff;
+    border-color: var(--admin-line);
+    color: var(--admin-text);
+  }
+  body.admin-page input:focus,
+  body.admin-page select:focus,
+  body.admin-page textarea:focus {
+    border-color: var(--admin-accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+  body.admin-page input::placeholder,
+  body.admin-page textarea::placeholder { color: var(--admin-soft-muted); }
+  body.admin-page select option { background: #fff; color: var(--admin-text); }
+  body.admin-page label { color: var(--admin-muted); }
+  body.admin-page .toast {
+    background: #fff;
+    border: 1px solid var(--admin-line);
+    color: var(--admin-text);
+    box-shadow: var(--admin-shadow);
+  }
+  body.admin-page ::-webkit-scrollbar-track { background: var(--admin-bg); }
+  body.admin-page ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+  body.admin-page ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   .admin-shell { display: grid; grid-template-columns: 240px 1fr; gap: 30px; padding: 38px 0 90px; }
   @media (max-width: 900px) { .admin-shell { grid-template-columns: 1fr; } }
 
@@ -23,8 +130,8 @@
     color: var(--muted); font: 600 14px var(--font-display); letter-spacing: .02em; transition: all .25s; }
   .side .sic { width: 18px; height: 18px; display: inline-grid; place-items: center; }
   .side .sic svg { width: 17px; height: 17px; }
-  .side button:hover { color: var(--text); background: var(--surface); }
-  .side button.active { color: var(--accent); background: rgba(214,184,138,.07); border-color: rgba(214,184,138,.3); }
+  .side button:hover { color: var(--text); background: var(--surface-2); }
+  .side button.active { color: var(--accent); background: rgba(37, 99, 235, 0.08); border-color: rgba(37, 99, 235, 0.22); }
   .side .sep { height: 1px; background: var(--line); margin: 10px 4px; }
   @media (max-width: 900px) { .side button { width: auto; } .side .sep { display: none; } }
 
@@ -48,7 +155,7 @@
   .pat-id { display: flex; align-items: center; gap: 16px; }
   .pat-avatar { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; flex: none;
     font-family: var(--font-serif); font-style: italic; font-size: 24px; color: var(--accent);
-    border: 1px solid var(--line-bright); background: rgba(214,184,138,.05); }
+    border: 1px solid var(--line); background: #eff6ff; color: var(--accent); }
   .pat-id h3 { font-size: 18px; }
   .pat-id small { color: var(--muted); }
   .pat-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
@@ -106,7 +213,7 @@
   .ftab { cursor: pointer; padding: 9px 18px; border-radius: 999px; border: 1px solid var(--line); background: transparent;
     color: var(--muted); font: 600 12.5px var(--font-display); letter-spacing: .03em; transition: all .2s; }
   .ftab:hover { color: var(--text); }
-  .ftab.active { color: var(--accent); border-color: rgba(214,184,138,.45); background: rgba(214,184,138,.07); }
+  .ftab.active { color: var(--accent); border-color: #93c5fd; background: #eff6ff; }
 
   .acct { padding: 0; margin-bottom: 12px; overflow: hidden; }
   .acct-row { display: grid; grid-template-columns: 52px 1fr auto auto 30px; gap: 16px; align-items: center; width: 100%;
@@ -133,19 +240,19 @@
   .trx .desc b { font-weight: 600; }
   .trx .desc span { color: var(--muted); display: block; font-size: 12px; }
   .trx .amt { font-family: var(--font-display); font-weight: 600; text-align: right; }
-  .trx .amt.charge { color: #d89aa8; }
-  .trx .amt.payment { color: #9ed0b3; }
+  .trx .amt.charge { color: #dc2626; }
+  .trx .amt.payment { color: #16a34a; }
   .trx .mth { color: var(--muted); font-size: 12px; }
   @media (max-width: 760px) { .trx { grid-template-columns: 1fr 100px; } .trx time, .trx .mth { display: none; } }
   .quick-pay { display: grid; grid-template-columns: 140px 150px auto 1fr; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
   @media (max-width: 760px) { .quick-pay { grid-template-columns: 1fr; } }
 
   /* link modal */
-  .modal-bg { position: fixed; inset: 0; z-index: 90; background: rgba(8,8,12,.75); backdrop-filter: blur(10px);
+  .modal-bg { position: fixed; inset: 0; z-index: 90; background: rgba(15, 23, 42, 0.35); backdrop-filter: blur(8px);
     display: none; place-items: center; padding: 20px; }
   .modal-bg.open { display: grid; }
-  .modal { width: min(560px, 100%); background: var(--bg-2); border: 1px solid var(--line-bright); border-radius: 22px; padding: 34px;
-    box-shadow: 0 30px 90px rgba(0,0,0,.7); animation: fadeUp .3s ease; }
+  .modal { width: min(560px, 100%); background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 34px;
+    box-shadow: var(--admin-shadow); animation: fadeUp .3s ease; }
   .modal h3 { font-size: 21px; margin-bottom: 8px; }
   .link-box { display: flex; gap: 10px; margin-top: 18px; }
   .link-box input { font-size: 13px; color: var(--accent); }
@@ -155,8 +262,8 @@
   .empty .big svg { width: 40px; height: 40px; }
 
   /* login gate */
-  #gate { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: grid; place-items: center; padding: 20px; }
-  .gate-card { width: min(440px, 100%); text-align: center; padding: 48px 40px; }
+  #gate { position: fixed; inset: 0; z-index: 200; background: var(--admin-bg); display: grid; place-items: center; padding: 20px; }
+  .gate-card { width: min(440px, 100%); text-align: center; padding: 48px 40px; box-shadow: var(--admin-shadow); }
   .gate-card .logo-mark { width: 58px; height: 58px; margin: 0 auto 20px; }
   .gate-card .logo-mark svg { width: 26px; height: 26px; }
   .gate-hint { font-size: 12px; color: var(--muted); margin-top: 18px; line-height: 1.7; }
@@ -166,24 +273,33 @@
   .user-chip .uc-name { text-align: right; line-height: 1.3; }
   .user-chip .uc-name b { font-family: var(--font-display); font-size: 13.5px; display: block; }
   .user-chip .uc-name span { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
-  .mode-tag { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
-  .mode-tag.live { color: var(--accent); border-color: var(--line-bright); }
+  .user-chip .uc-name b { color: var(--admin-text); }
+  .mode-tag { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); background: #fff; }
+  .mode-tag.live { color: #1d4ed8; border-color: #bfdbfe; background: #eff6ff; }
+  .stat-card { background: #fff; border: 1px solid var(--line); box-shadow: var(--admin-shadow-soft); }
+  .stat-card b { background: var(--admin-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .prog-chip.full { color: #1d4ed8; border-color: #bfdbfe; background: #eff6ff; }
+  .chk:hover { background: var(--surface-2); }
+  .chk.done { color: #1d4ed8; }
+  .acct-row:hover { background: var(--surface-2); }
+  .ftab:hover { background: var(--surface-2); }
+  .empty { background: #fff; border-color: var(--line); color: var(--muted); }
 </style>
 </head>
-<body>
+<body class="admin-page">
 <div class="bg-fx"></div>
 <div class="bg-grid"></div>
 
 <!-- ====== LOGIN GATE ====== -->
 <div id="gate">
   <div class="card gate-card">
-    <div class="logo-mark" data-paw style="display:grid;"></div>
+    <img class="logo-img" src="assets/img/logo.png" alt="Al Hud Hud Veterinary Clinic" style="margin:0 auto 20px;height:72px;" />
     <h2 style="margin-bottom:6px;">Staff Access</h2>
     <p class="muted" style="font-size:14px; margin-bottom:28px;">Sign in to the clinic admin panel.</p>
     <div class="field" style="text-align:left;"><label>Username</label><input id="loginUser" autocomplete="username" placeholder="username" /></div>
     <div class="field" style="text-align:left;"><label>Password</label><input type="password" id="loginPw" autocomplete="current-password" placeholder="••••••••" /></div>
     <button class="btn btn-primary" style="width:100%; margin-top:6px;" onclick="doLogin()">Sign In</button>
-    <p id="loginErr" style="color:#e09aa8; font-size:13px; margin-top:14px; visibility:hidden;">Invalid username or password</p>
+    <p id="loginErr" style="color:#dc2626; font-size:13px; margin-top:14px; visibility:hidden;">Invalid username or password</p>
     <p class="gate-hint">First time? Sign in with <b>superadmin / admin123</b>,<br/>then change the password from the Admins panel.</p>
   </div>
 </div>
@@ -191,7 +307,7 @@
 <!-- ================= NAV ================= -->
 <nav class="nav">
   <div class="container nav-inner">
-    <a class="logo" href="index.html"><span class="logo-mark" data-paw></span> Al Hud Hud <span class="grad-text" style="margin-left:6px;">Admin</span></a>
+    <a class="logo" href="index.html"><img class="logo-img" src="assets/img/logo.png" alt="Al Hud Hud Veterinary Clinic" /> Al Hud Hud <span class="grad-text" style="margin-left:6px;">Admin</span></a>
     <div class="user-chip">
       <span class="mode-tag" id="modeTag"></span>
       <div class="uc-name"><b id="ucName"></b><span id="ucRole"></span></div>
@@ -354,6 +470,7 @@
     <!-- ================= ADMINS (super only) ================= -->
     <section class="panel" id="panel-admins">
       <div class="panel-head"><h2>Admin <span class="grad-text">Accounts</span></h2></div>
+      <div class="card" id="adminList" style="margin-bottom:22px;"></div>
       <div class="card" style="margin-bottom:22px;">
         <form onsubmit="return createAdmin(event)">
           <div class="form-row">
@@ -367,13 +484,20 @@
           <p class="muted" style="font-size:12.5px;">Staff admins can manage patients, services and offers. Only you (super admin) can manage accounts and view the audit trail.</p>
         </form>
       </div>
-      <div class="card" id="adminList"></div>
       <div class="card" style="margin-top:22px;">
         <h3 style="font-size:16px; margin-bottom:14px;">Change your password</h3>
-        <div class="form-row">
-          <div class="field"><label>New Password</label><input id="cp_pw" type="password" minlength="6" placeholder="min 6 characters" autocomplete="new-password" /></div>
-          <div class="field" style="display:flex; align-items:flex-end;"><button class="btn btn-ghost btn-sm" onclick="changeMyPassword()" style="width:100%;">Update Password</button></div>
-        </div>
+        <button type="button" class="btn btn-ghost btn-sm" id="cp_toggle" onclick="togglePasswordForm()">Change Password</button>
+        <form id="cp_form" style="display:none; margin-top:18px;" onsubmit="return changeMyPassword(event)">
+          <div class="field"><label>Current Password</label><input id="cp_old" type="password" autocomplete="current-password" placeholder="Enter your current password" /></div>
+          <div class="form-row">
+            <div class="field"><label>New Password</label><input id="cp_pw" type="password" minlength="6" placeholder="min 6 characters" autocomplete="new-password" /></div>
+            <div class="field"><label>Repeat New Password</label><input id="cp_pw2" type="password" minlength="6" placeholder="Repeat new password" autocomplete="new-password" /></div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;">
+            <button class="btn btn-primary btn-sm" type="submit">Save Changes</button>
+            <button class="btn btn-ghost btn-sm" type="button" onclick="cancelPasswordForm()">Cancel</button>
+          </div>
+        </form>
       </div>
     </section>
 
@@ -435,13 +559,31 @@
   </div>
 </div>
 
+<!-- ================= EDIT SERVICE MODAL ================= -->
+<div class="modal-bg" id="serviceModal" onclick="if(event.target===this) closeServiceModal()">
+  <div class="modal">
+    <h3>Edit Service</h3>
+    <p class="muted" style="font-size:13.5px; margin-bottom:18px;">Update the service shown on the website.</p>
+    <form onsubmit="return saveServiceEdit(event)">
+      <div class="form-row">
+        <div class="field"><label>Icon</label><input id="es_icon" placeholder="stethoscope, syringe, tooth, flask, scan, heart, paw…" /></div>
+        <div class="field"><label>Service Name *</label><input required id="es_name" placeholder="e.g. Microchipping" /></div>
+      </div>
+      <div class="field"><label>Description *</label><textarea required id="es_desc" rows="3" placeholder="Short description shown on the website…"></textarea></div>
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:6px;">
+        <button class="btn btn-ghost btn-sm" type="button" onclick="closeServiceModal()">Cancel</button>
+        <button class="btn btn-primary btn-sm" type="submit">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="assets/js/config.js"></script>
 <script src="assets/js/store.js"></script>
 <script src="assets/js/icons.js"></script>
 <script>
-  document.querySelectorAll('[data-paw]').forEach(el => el.innerHTML = HudIcons.paw);
   document.querySelectorAll('[data-icon]').forEach(el => el.innerHTML = HudIcons.render(el.dataset.icon, 16));
 
   /* populate static selects */
@@ -627,7 +769,10 @@
     wrap.innerHTML = items.length ? items.map(s => `
       <div class="row-item">
         <div class="info"><span class="ic">${HudIcons.render(s.icon, 20)}</span><div><b>${esc(s.name)}</b><span>${esc(s.desc)}</span></div></div>
-        <button class="btn btn-danger btn-sm" onclick="removeService('${s.id}', '${esc(s.name)}')">Delete</button>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-sm" onclick="openEditServiceModal('${s.id}')">Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="removeService('${s.id}', '${esc(s.name)}')">Delete</button>
+        </div>
       </div>`).join('') : '<p class="muted">No services yet.</p>';
   }
   async function createService(e) {
@@ -642,6 +787,33 @@
     await HudStore.deleteService(id);
     await HudStore.logAudit(USER, 'Removed service', name);
     await renderServices(); toast('Service removed');
+  }
+  let editingServiceId = null;
+  async function openEditServiceModal(id) {
+    const s = (await HudStore.getServices()).find(x => x.id === id);
+    if (!s) return;
+    editingServiceId = id;
+    es_icon.value = s.icon || '';
+    es_name.value = s.name || '';
+    es_desc.value = s.desc || '';
+    document.getElementById('serviceModal').classList.add('open');
+  }
+  function closeServiceModal() {
+    editingServiceId = null;
+    document.getElementById('serviceModal').classList.remove('open');
+  }
+  async function saveServiceEdit(e) {
+    e.preventDefault();
+    if (!editingServiceId) return false;
+    const name = es_name.value.trim();
+    const desc = es_desc.value.trim();
+    if (!name || !desc) { toast('Name and description are required'); return false; }
+    await HudStore.updateService(editingServiceId, { icon: es_icon.value.trim() || 'paw', name, desc });
+    await HudStore.logAudit(USER, 'Updated service', name);
+    closeServiceModal();
+    await renderServices();
+    toast('Service updated — changes are live on the website');
+    return false;
   }
 
   /* ====== offers ====== */
@@ -986,7 +1158,7 @@
           <span><span class="nm">${esc(r.name)}</span><div class="ow">${r.owner ? esc(r.owner) : ''}${r.bal.nextDue && r.bal.balance > 0 ? ' · due ' + esc(r.bal.nextDue) : ''}</div></span>
           <span class="pill ${r.stClass}">${r.stLabel}</span>
           <span class="acct-balance">
-            <b style="color:${r.bal.balance > 0 ? '#d89aa8' : '#9ed0b3'};">${AED(Math.abs(r.bal.balance))}</b>
+            <b style="color:${r.bal.balance > 0 ? '#dc2626' : '#16a34a'};">${AED(Math.abs(r.bal.balance))}</b>
             <span>${r.bal.balance > 0 ? 'due' : r.bal.balance < 0 ? 'credit' : 'settled'}</span>
           </span>
           <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></span>
@@ -1133,12 +1305,30 @@
     await HudStore.deleteUser(id, USER);
     await renderAdmins(); toast('Admin removed');
   }
-  async function changeMyPassword() {
+  function togglePasswordForm() {
+    document.getElementById('cp_form').style.display = '';
+    document.getElementById('cp_toggle').style.display = 'none';
+    document.getElementById('cp_old').focus();
+  }
+  function cancelPasswordForm() {
+    document.getElementById('cp_form').style.display = 'none';
+    document.getElementById('cp_toggle').style.display = '';
+    ['cp_old', 'cp_pw', 'cp_pw2'].forEach(id => document.getElementById(id).value = '');
+  }
+  async function changeMyPassword(e) {
+    e.preventDefault();
+    const oldPw = document.getElementById('cp_old').value;
     const pw = document.getElementById('cp_pw').value;
-    if (pw.length < 6) { toast('Password must be at least 6 characters'); return; }
+    const pw2 = document.getElementById('cp_pw2').value;
+    if (!oldPw) { toast('Enter your current password'); return false; }
+    if (pw.length < 6) { toast('Password must be at least 6 characters'); return false; }
+    if (pw !== pw2) { toast('New passwords do not match'); return false; }
+    const verified = await HudStore.login(USER.username, oldPw).catch(() => null);
+    if (!verified) { toast('Current password is incorrect'); return false; }
     await HudStore.changePassword(USER.id, pw, USER);
-    document.getElementById('cp_pw').value = '';
+    cancelPasswordForm();
     toast('Password updated');
+    return false;
   }
 
   /* ====== audit trail (super only) ====== */
